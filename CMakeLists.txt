@@ -29,6 +29,7 @@ file(GLOB SOURCE_FILES
         )
 
 add_executable(graphics graphics.cpp graphics.h)
+add_executable(minesweeper main.cpp Tile.h Bomb.h Safe_Space.h Game.h)
 
 if (WIN32)
     target_link_libraries (graphics ${OPENGL_LIBRARIES} freeglut)
