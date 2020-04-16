@@ -6,8 +6,8 @@ GLdouble width, height;
 int wd;
 
 void init() {
-    width = 1200;
-    height = 600;
+    width = 1240;
+    height = 640;
 }
 
 /* Initialize OpenGL Graphics */
@@ -33,26 +33,114 @@ void display() {
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // DO NOT CHANGE THIS LINE
 
+    //main_menu();
 
 
 
+    /**
+    * This draws an 8x8 board
+     * width: 75
+     * height: 75
+     * padding: 20
+    **/
+    int tiles_height = 8, tiles_width = 8;
+    double x = 0, y = 0, padding = 20;
+    double h = (height - 2 * padding)/ tiles_height;
+    double w = (width - 2 * padding)/ tiles_width;
+    x += padding;
+    y += padding;
 
-/*    *//**
-     * Quads usage
-     *//*
-    glBegin(GL_QUADS);
-    // Square
-    glColor3f(1.0, 1.0, 1.0);
-    glVertex2i(660, 100);
-    glVertex2i(660, 140);
-    glVertex2i(700, 140);
-    glVertex2i(700, 100);
-    glEnd();*/
+
+    for (int row = 0; row < tiles_height; row++) {
+        for (int column = 0; column < tiles_width; column++) {
+            draw_tile(x, y, w, h, column, row);
+            x += w;
+        }
+        x = padding;
+        y += h;
+    }
 
     glFlush();  // Render now
 }
 
-// http://www.theasciicode.com.ar/ascii-control-characters/escape-ascii-code-27.html
+void draw_tile(double x, double y, double w, double h, int column, int row) {
+    if (row % 2 == 0) {
+        ++column;
+    }
+    if (column % 2 == 1) {
+        glColor3f(colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b);
+    } else {
+        glColor3f(colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b);
+    }
+    glBegin(GL_QUADS);
+    glVertex2i( x + 0 * w, y + 0 * h);
+    glVertex2i(x + 1 * w, y + 0 * h);
+    glVertex2i(x + 1 * w, y + 1 * h);
+    glVertex2i(x + 0 * w, y + 1 * h);
+    glEnd();
+
+    //display_num(58, 58, 7);
+
+}
+
+void main_menu() {
+    unsigned char string[] = "Minesweeper";
+    int w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, string);
+    glRasterPos2i(width / 2 - (float)w / 2,60);
+    for (char c : string) {
+        glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+
+    unsigned char easy[] = "EASY";
+    w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, easy);
+    menu_colors(w, 1, colors[EASY].r, colors[EASY].g, colors[EASY].b);
+    glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
+    glRasterPos2i(width / 2 - (float)w / 2,(height - 60.0) / 4 + 60);
+    for (char c : easy) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+
+
+    unsigned char intermediate[] = "INTERMEDIATE";
+    w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, intermediate);
+    menu_colors(w, 2, colors[INTERMEDIATE].r, colors[INTERMEDIATE].g, colors[INTERMEDIATE].b);
+    glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
+    glRasterPos2i(width / 2 - (float)w / 2,((height - 60.0) * 2) / 4 + 60);
+    for (char c : intermediate) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+
+
+    unsigned char expert[] = "EXPERT";
+    w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, expert);
+    menu_colors(w, 3, colors[EXPERT].r, colors[EXPERT].g, colors[EXPERT].b);
+    glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
+    glRasterPos2i(width / 2 - (float)w / 2,((height - 60.0) * 3) / 4 + 60);
+    for (char c : expert) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+}
+
+void menu_colors(int w, int num, float r, float g, float b) {
+    glColor3f(r, g, b);
+    glBegin(GL_QUADS);
+    glVertex2i((width / 2 - (float)w / 2) - 10, ((height - 60.0) * num / 4 + 60) + 18);
+    glVertex2i((width / 2 + (float)w / 2) + 10, ((height - 60.0) * num / 4 + 60) + 18);
+    glVertex2i((width / 2 + (float)w / 2) + 10, ((height - 60.0) * num / 4 + 60) - 32);
+    glVertex2i((width / 2 - (float)w / 2) - 10, ((height - 60.0) * num / 4 + 60) - 32);
+    glEnd();
+}
+
+
+void display_num(int x, int y, int num) {
+    glColor3f(colors[FIVE].r, colors[FIVE].g, colors[FIVE].b);
+    glRasterPos2i(x,y);
+    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '0' + num);
+    glEnd();
+}
+
+
 void kbd(unsigned char key, int x, int y)
 {
     // escape
@@ -63,43 +151,34 @@ void kbd(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-void kbdS(int key, int x, int y) {
-    switch(key) {
-        case GLUT_KEY_DOWN:
-            
-            break;
-        case GLUT_KEY_LEFT:
-            
-            break;
-        case GLUT_KEY_RIGHT:
-            
-            break;
-        case GLUT_KEY_UP:
-            
-            break;
-    }
-    
+void cursor(int x, int y) {
+    // if ( x, y inside of game board)
+        // if (x, y is open)
+            // make background lighter brown
+        // else
+            // make background lighter green
+    // else if (x, y over main menu button)
+        // change background color
+
     glutPostRedisplay();
 }
 
-void cursor(int x, int y) {
-    
-    glutPostRedisplay();
-}
+/*void hover() {
+    setColor();
+}*/
 
 // button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        // if (main_menu(x,y)) -> checks if x, y inside main menu button boundaries
+            // init();
+        // else if (game is not over && game has not been won)
+            // openCell(x,y)
 
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN /* && tile == not_pressed */) {
-        // tile.pressed = true
-        // if (even)
-            // c.setColor(colors[DARK_BROWN])
-        // else
-            // c.setColor(colors[LIGHT_BROWN])
-
-    } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN /* && tile == not_pressed*/) {
-        // tile.flag = true
+    } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
+        // if (game is not over || game has not been won)
+            // toggle_flag(x,y)
 
     }
     
@@ -135,9 +214,6 @@ int main(int argc, char** argv) {
     // register keyboard press event processing function
     // works for numbers, letters, spacebar, etc.
     glutKeyboardFunc(kbd);
-    
-    // register special event: function keys, arrows, etc.
-    glutSpecialFunc(kbdS);
     
     // handles mouse movement
     glutPassiveMotionFunc(cursor);

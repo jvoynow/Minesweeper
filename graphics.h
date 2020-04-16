@@ -43,44 +43,54 @@ void timer(int dummy);
 // Handle mouse button pressed and released events
 void mouse(int button, int state, int x, int y);
 
+void draw_tile(double x, double y, double w, double h, int column, int row);
 
-class Graphics {
-public:
+void main_menu();
 
-private:
-    enum Colors {
-        DARK_GREEN,
-        LIGHT_GREEN,
-        DARK_BROWN,
-        LIGHT_BROWN,
-        ONE,
-        TWO,
-        THREE,
-        FOUR,
-        FIVE,
-        SIX,
-        SEVEN,
-        EIGHT
-    };
-    constexpr static const struct {
-        float r, g, b;
-    } colors[] = {
-            {161.0/255.0, 207.0/255.0, 72.0/255.0}, // Dark Green
-            {171.0/255.0, 214.0/255.0, 81.0/255.0}, // Light Green
+void display_num(int x, int y, int num);
 
-            {213.0/255.0, 182.0/255.0, 153.0/255.0}, // Dark Brown
-            {227.0/255.0, 293.0/255.0, 156.0/255.0}, // Light Brown
+void menu_colors(int w, int num, float r, float g, float b);
 
-            {0, 0, 1}, // One
-            {0, 128.0/255.0, 0}, // Two
-            {1, 0, 0}, // Three
-            {0, 0 , 128.0/255.0}, // Four
-            {128.0/255.0, 0, 0}, // Five
-            {0, 128.0/255.0, 128.0/255.0}, // Six
-            {0,0,0}, // Seven
-            {128.0/255.0, 128.0/255.0, 128.0/255.0}, // Eight
-    };
+enum Color {
+    DARK_GREEN,
+    LIGHT_GREEN,
+    DARK_BROWN,
+    LIGHT_BROWN,
+    ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    EASY,
+    INTERMEDIATE,
+    EXPERT
 };
+static const struct {
+    float r, g, b;
+} colors[] = {
+        {155.0/255.0, 200.0/255.0, 65.0/255.0}, // Dark Green
+        {171.0/255.0, 214.0/255.0, 81.0/255.0}, // Light Green
+
+        {213.0/255.0, 182.0/255.0, 153.0/255.0}, // Dark Brown
+        {227.0/255.0, 293.0/255.0, 156.0/255.0}, // Light Brown
+
+        {0, 0, 1}, // One
+        {0, 128.0/255.0, 0}, // Two
+        {1, 0, 0}, // Three
+        {0, 0 , 128.0/255.0}, // Four
+        {128.0/255.0, 0, 0}, // Five
+        {0, 128.0/255.0, 128.0/255.0}, // Six
+        {0,0,0}, // Seven
+        {128.0/255.0, 128.0/255.0, 128.0/255.0}, // Eight
+
+        {0, 1.0, 0}, // Easy
+        {1, 1.0, 0}, // Intermediate
+        {1.0,0,0}, // Expert
+};
+
 
 
 #endif /* graphics_h */
