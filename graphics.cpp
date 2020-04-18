@@ -1,19 +1,21 @@
 #include "graphics.h"
+#include "Button.h"
 #include <iostream>
 using namespace std;
 
-GLdouble width, height;
+GLdouble width, height, padding;
 int wd;
 
 void init() {
     width = 1240;
     height = 640;
+    padding = 300;
 }
 
 /* Initialize OpenGL Graphics */
 void initGL() {
     // Set "clearing" or background color
-    glClearColor(128.0/255.0f, 128.0/255.0f, 128.0/255.0f, 1.0f); // Black and opaque
+    glClearColor(colors[MENU_BACKGROUND].r, colors[MENU_BACKGROUND].g, colors[MENU_BACKGROUND].b, 1.0f);
 }
 
 /* Handler for window-repaint event. Call back when the window first appears and
@@ -33,22 +35,55 @@ void display() {
     
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // DO NOT CHANGE THIS LINE
 
-    //main_menu();
 
-
-
+    title();
     /**
     * This draws an 8x8 board
      * width: 75
      * height: 75
      * padding: 20
     **/
-    int tiles_height = 8, tiles_width = 8;
-    double x = 0, y = 0, padding = 20;
-    double h = (height - 2 * padding)/ tiles_height;
-    double w = (width - 2 * padding)/ tiles_width;
-    x += padding;
-    y += padding;
+    int tiles_width = 8, tiles_height = 8;
+    unsigned char easy_chars[] = "EASY";
+    unsigned char intermediate_chars[] = "INTERMEDIATE";
+    unsigned char expert_chars[] = "EXPERT";
+
+    int button_width = glutBitmapLength(GLUT_BITMAP_HELVETICA_18, intermediate_chars);
+    Button easy({colors[WHITE].r, colors[WHITE].g, colors[WHITE].b},
+            {colors[WHITE_HOVER].r, colors[WHITE_HOVER].g, colors[WHITE_HOVER].b},
+            (((float)padding / 2 - ((float)button_width / 2)) - 10),
+            (((float)padding / 2 + ((float)button_width / 2)) + 10),
+            (((float)height / 2) - 106),
+            (((float)height / 2) - 70),
+            "EASY",
+            button_width);
+    int easy_length = glutBitmapLength(GLUT_BITMAP_HELVETICA_18, easy_chars);
+    easy.draw(padding, easy_length);
+
+    Button intermediate({colors[WHITE].r, colors[WHITE].g, colors[WHITE].b},
+                {colors[WHITE_HOVER].r, colors[WHITE_HOVER].g, colors[WHITE_HOVER].b},
+                (((float)padding / 2 - ((float)button_width / 2)) - 10),
+                (((float)padding / 2 + ((float)button_width / 2)) + 10),
+                (((float)height / 2) - 66),
+                (((float)height / 2) - 26),
+                "INTERMEDIATE",
+                button_width);
+    intermediate.draw(padding, button_width);
+
+    Button expert({colors[WHITE].r, colors[WHITE].g, colors[WHITE].b},
+                        {colors[WHITE_HOVER].r, colors[WHITE_HOVER].g, colors[WHITE_HOVER].b},
+                        (((float)padding / 2 - ((float)button_width / 2)) - 10),
+                        (((float)padding / 2 + ((float)button_width / 2)) + 10),
+                        (((float)height / 2) - 22),
+                        (((float)height / 2) + 14),
+                        "EXPERT",
+                        button_width);
+    int expert_length = glutBitmapLength(GLUT_BITMAP_HELVETICA_18, expert_chars);
+    expert.draw(padding, expert_length);
+
+    double x = padding, y = 0;
+    double h = (height)/ tiles_height;
+    double w = (width - padding)/ tiles_width;
 
 
     for (int row = 0; row < tiles_height; row++) {
@@ -59,6 +94,8 @@ void display() {
         x = padding;
         y += h;
     }
+
+    display_creators();
 
     glFlush();  // Render now
 }
@@ -83,53 +120,14 @@ void draw_tile(double x, double y, double w, double h, int column, int row) {
 
 }
 
-void main_menu() {
-    unsigned char string[] = "Minesweeper";
-    int w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, string);
-    glRasterPos2i(width / 2 - (float)w / 2,60);
-    for (char c : string) {
-        glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
+void title() {
+    unsigned char title[] = "Minesweeper";
+    int w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, title);
+    glRasterPos2i((float)padding / 2 - (float)w / 2,60);
+    glColor3f(colors[BLACK].r, colors[BLACK].g, colors[BLACK].b);
+    for (char c : title) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
     }
-
-    unsigned char easy[] = "EASY";
-    w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, easy);
-    menu_colors(w, 1, colors[EASY].r, colors[EASY].g, colors[EASY].b);
-    glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
-    glRasterPos2i(width / 2 - (float)w / 2,(height - 60.0) / 4 + 60);
-    for (char c : easy) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
-    }
-
-
-    unsigned char intermediate[] = "INTERMEDIATE";
-    w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, intermediate);
-    menu_colors(w, 2, colors[INTERMEDIATE].r, colors[INTERMEDIATE].g, colors[INTERMEDIATE].b);
-    glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
-    glRasterPos2i(width / 2 - (float)w / 2,((height - 60.0) * 2) / 4 + 60);
-    for (char c : intermediate) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
-    }
-
-
-    unsigned char expert[] = "EXPERT";
-    w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, expert);
-    menu_colors(w, 3, colors[EXPERT].r, colors[EXPERT].g, colors[EXPERT].b);
-    glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
-    glRasterPos2i(width / 2 - (float)w / 2,((height - 60.0) * 3) / 4 + 60);
-    for (char c : expert) {
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
-    }
-}
-
-void menu_colors(int w, int num, float r, float g, float b) {
-    glColor3f(r, g, b);
-    glBegin(GL_QUADS);
-    glVertex2i((width / 2 - (float)w / 2) - 10, ((height - 60.0) * num / 4 + 60) + 18);
-    glVertex2i((width / 2 + (float)w / 2) + 10, ((height - 60.0) * num / 4 + 60) + 18);
-    glVertex2i((width / 2 + (float)w / 2) + 10, ((height - 60.0) * num / 4 + 60) - 32);
-    glVertex2i((width / 2 - (float)w / 2) - 10, ((height - 60.0) * num / 4 + 60) - 32);
-    glEnd();
 }
 
 
@@ -138,6 +136,31 @@ void display_num(int x, int y, int num) {
     glRasterPos2i(x,y);
     glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '0' + num);
     glEnd();
+}
+
+void display_creators() {
+    unsigned char opening[] = "Created by:", parker[] = "Parker Strawbridge", sep[] = "&", jamie[] = "Jamie Voynow";
+    int w = glutBitmapLength(GLUT_BITMAP_HELVETICA_10, opening);
+    glColor3f(colors[BLACK].r, colors[BLACK].g, colors[BLACK].b);
+    glRasterPos2i(float(padding) / 5 - (float)w / 2,height - 22);
+    for (char c : opening) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, c);
+    }
+    w = glutBitmapLength(GLUT_BITMAP_HELVETICA_10, parker);
+    glRasterPos2i(float(padding) / 2 - (float)w / 2,height - 36);
+    for (char c : parker) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, c);
+    }
+    w = glutBitmapLength(GLUT_BITMAP_HELVETICA_10, sep);
+    glRasterPos2i(float(padding) / 2 - (float)w / 2,height - 22);
+    for (char c : sep) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, c);
+    }
+    w = glutBitmapLength(GLUT_BITMAP_HELVETICA_10, jamie);
+    glRasterPos2i(float(padding) / 2 - (float)w / 2,height - 8);
+    for (char c : jamie) {
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, c);
+    }
 }
 
 
@@ -163,9 +186,6 @@ void cursor(int x, int y) {
     glutPostRedisplay();
 }
 
-/*void hover() {
-    setColor();
-}*/
 
 // button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
 // state will be GLUT_UP or GLUT_DOWN
@@ -194,9 +214,9 @@ void timer(int dummy) {
 /* Main function: GLUT runs as a console application starting at main()  */
 int main(int argc, char** argv) {
 
-    init();
-    
     glutInit(&argc, argv);          // Initialize GLUT
+    init();
+
     
     glutInitDisplayMode(GLUT_RGBA);
     

@@ -45,11 +45,11 @@ void mouse(int button, int state, int x, int y);
 
 void draw_tile(double x, double y, double w, double h, int column, int row);
 
-void main_menu();
+void title();
 
 void display_num(int x, int y, int num);
 
-void menu_colors(int w, int num, float r, float g, float b);
+void display_creators();
 
 enum Color {
     DARK_GREEN,
@@ -64,9 +64,10 @@ enum Color {
     SIX,
     SEVEN,
     EIGHT,
-    EASY,
-    INTERMEDIATE,
-    EXPERT
+    WHITE,
+    WHITE_HOVER,
+    BLACK,
+    MENU_BACKGROUND
 };
 static const struct {
     float r, g, b;
@@ -86,9 +87,10 @@ static const struct {
         {0,0,0}, // Seven
         {128.0/255.0, 128.0/255.0, 128.0/255.0}, // Eight
 
-        {0, 1.0, 0}, // Easy
-        {1, 1.0, 0}, // Intermediate
-        {1.0,0,0}, // Expert
+        {1.0,1.0,1.0}, // White
+        {244.0/255.0, 244.0/255.0, 244.0/255.0}, // White hover
+        {0, 0, 0}, // Black
+        {92.0/255.0,134.0/255.0,92.0/255.0}, // Menu Background
 };
 
 
