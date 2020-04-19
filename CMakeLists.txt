@@ -28,7 +28,7 @@ file(GLOB SOURCE_FILES
         *.h
         )
 
-add_executable(graphics graphics.cpp graphics.h)
+add_executable(graphics graphics.cpp graphics.h Button.cpp Button.h)
 add_executable(minesweeper main.cpp Tile.h Bomb.h Safe_Space.h Game.h)
 
 if (WIN32)

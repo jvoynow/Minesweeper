@@ -4,21 +4,34 @@
 #include <string>
 
 struct color {
-    float r, g, b;
+    double r, g, b;
 };
 
 class Button {
 private:
     color current_fill{}, original_fill{}, hover_fill{};
-    float x1, x2, y1, y2, width;
+    double x1, x2, y1, y2;
     std::string text;
 public:
-    Button (color original, color hover_fill, float x1, float x2, float y1, float y2, std::string text, float width);
+    Button();
+    Button (color original, color hover_fill, double x1, double x2, double y1, double y2, std::string text);
 
     color get_fill() const;
+    std::string get_text() const;
 
-    void set_color(color fill);
-    void set_color(float r, float g, float b);
+    void set_current_fill(color fill);
+    void set_current_fill(double r, double g, double b);
+    void set_original_fill(color fill);
+    void set_original_fill(double r, double g, double b);
+    void set_hover_fill(color fill);
+    void set_hover_fill(double r, double g, double b);
+
+    void set_x1(double x1);
+    void set_x2(double x2);
+    void set_y1(double y1);
+    void set_y2(double y2);
+
+    void set_text(std::string text);
 
     void draw(int padding, int length) const;
 

@@ -4,11 +4,23 @@
 #include "graphics.h"
 using namespace std;
 
-Button::Button(color original, color hover_fill, float x1, float x2, float y1, float y2, string text, float width) {
+Button::Button() {
+    current_fill = {1.0,1.0,1.0};
+    original_fill = {0,0,0};
+    hover_fill = {1.0, 1.0, 1.0};
+
+    x1 = 0;
+    x2 = 1;
+
+    y1 = 0;
+    y2 = 1;
+    text = "";
+}
+
+Button::Button(color original, color hover_fill, double x1, double x2, double y1, double y2, string text) {
     current_fill = original;
     original_fill = original;
     this->hover_fill = hover_fill;
-    this->width = width;
 
     this->x1 = x1;
     this->x2 = x2;
@@ -37,26 +49,71 @@ void Button::draw(int padding, int length) const{
 }
 
 bool Button::is_overlapping(int x, int y) const {
-    return x >= x1 && x <= x2 && y >= y1 && y <= y2;
+    return x >= x1 && y >= y1 && x <= x2 && y <= y2;
 }
 
 void Button::hover() {
-    set_color(hover_fill);
+    set_current_fill(hover_fill);
 }
 
 void Button::stop_hover() {
-    set_color(original_fill);
+    set_current_fill(original_fill);
 }
 
 color Button::get_fill() const {
     return current_fill;
 }
 
-void Button::set_color(color fill) {
-    this->current_fill = fill;
+void Button::set_current_fill(color fill) {
+    current_fill = fill;
 }
 
-void Button::set_color(float r, float g, float b) {
+void Button::set_current_fill(double r, double g, double b) {
     current_fill = {r, g, b};
 }
+
+void Button::set_original_fill(color fill) {
+    original_fill = fill;
+}
+
+void Button::set_original_fill(double r, double g, double b) {
+    original_fill = {r, g, b};
+}
+
+void Button::set_hover_fill(color fill) {
+    hover_fill = fill;
+}
+
+void Button::set_hover_fill(double r, double g, double b) {
+    hover_fill = {r, g, b};
+}
+
+void Button::set_x1(double x1) {
+    this->x1 = x1;
+
+}
+
+void Button::set_x2(double x2) {
+    this->x2 = x2;
+
+}
+
+void Button::set_y1(double y1) {
+    this->y1 = y1;
+
+}
+
+void Button::set_y2(double y2) {
+    this->y2 = y2;
+
+}
+
+void Button::set_text(std::string text) {
+    this->text = std::move(text);
+}
+
+std::string Button::get_text() const {
+    return text;
+}
+
 

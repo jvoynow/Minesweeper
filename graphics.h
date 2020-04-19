@@ -1,6 +1,9 @@
 #ifndef graphics_h
 #define graphics_h
 
+#include "Button.h"
+#include <vector>
+
 #include <cstdlib>
 #ifdef _WIN32
 #include <windows.h>
@@ -49,6 +52,10 @@ void title();
 
 void display_num(int x, int y, int num);
 
+void create_difficulty_buttons();
+
+void create_main_menu_button();
+
 void display_creators();
 
 enum Color {
@@ -70,7 +77,7 @@ enum Color {
     MENU_BACKGROUND
 };
 static const struct {
-    float r, g, b;
+    double r, g, b;
 } colors[] = {
         {155.0/255.0, 200.0/255.0, 65.0/255.0}, // Dark Green
         {171.0/255.0, 214.0/255.0, 81.0/255.0}, // Light Green
@@ -88,7 +95,7 @@ static const struct {
         {128.0/255.0, 128.0/255.0, 128.0/255.0}, // Eight
 
         {1.0,1.0,1.0}, // White
-        {244.0/255.0, 244.0/255.0, 244.0/255.0}, // White hover
+        {220.0/255.0, 220.0/255.0, 220.0/255.0}, // White hover
         {0, 0, 0}, // Black
         {92.0/255.0,134.0/255.0,92.0/255.0}, // Menu Background
 };
