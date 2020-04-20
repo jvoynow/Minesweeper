@@ -50,7 +50,7 @@ void draw_tile(double x, double y, double w, double h, int column, int row);
 
 void title();
 
-void display_num(int x, int y, int num);
+void display_num(double x, double y, int num);
 
 void create_difficulty_buttons();
 
@@ -82,8 +82,8 @@ static const struct {
         {155.0/255.0, 200.0/255.0, 65.0/255.0}, // Dark Green
         {171.0/255.0, 214.0/255.0, 81.0/255.0}, // Light Green
 
-        {213.0/255.0, 182.0/255.0, 153.0/255.0}, // Dark Brown
-        {227.0/255.0, 293.0/255.0, 156.0/255.0}, // Light Brown
+        {200.0/255.0, 143.0/255.0, 87.0/255.0}, // Dark Brown
+        {213.0/255.0, 169.0/255.0, 125.0/255.0},// Light Brown
 
         {0, 0, 1}, // One
         {0, 128.0/255.0, 0}, // Two

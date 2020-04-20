@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "Game.h"
 #include <iostream>
 #include <vector>
 
@@ -8,6 +9,8 @@ GLdouble width, height, padding;
 int tiles_width = 0, tiles_height = 0;
 int wd;
 Button easy, intermediate, expert, main_menu;
+Game game;
+
 
 void init() {
     width = 1240;
@@ -154,7 +157,7 @@ void title() {
 }
 
 
-void display_num(int x, int y, int num) {
+void display_num(double x, double y, int num) {
     glColor3f(colors[FIVE].r, colors[FIVE].g, colors[FIVE].b);
     glRasterPos2i(x,y);
     glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '0' + num);
@@ -234,18 +237,34 @@ void cursor(int x, int y) {
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        if (easy.is_overlapping(x,y) && tiles_width == 0 && tiles_height == 0) {
+        if (easy.is_overlapping(x,y) && game.get_tile_width() == 0 && game.get_tile_height() == 0) {
             tiles_height = 8;
             tiles_width = 8;
-        } else if (intermediate.is_overlapping(x,y) && tiles_width == 0 && tiles_height == 0) {
+
+            game.set_tile_width(8);
+            game.set_tile_height(8);
+            game.set_bomb_count(10);
+        } else if (intermediate.is_overlapping(x,y) && game.get_tile_width() == 0 && game.get_tile_height() == 0) {
             tiles_height = 16;
             tiles_width = 16;
-        } else if (expert.is_overlapping(x,y) && tiles_width == 0 && tiles_height == 0) {
+
+            game.set_tile_width(16);
+            game.set_tile_height(16);
+            game.set_bomb_count(40);
+        } else if (expert.is_overlapping(x,y) && game.get_tile_width() == 0 && game.get_tile_height() == 0) {
             tiles_height = 16;
             tiles_width = 30;
-        } else if (main_menu.is_overlapping(x, y) && tiles_width != 0 && tiles_height != 0) {
+
+            game.set_tile_width(30);
+            game.set_tile_height(16);
+            game.set_bomb_count(99);
+        } else if (main_menu.is_overlapping(x, y) && game.get_tile_width() != 0 && game.get_tile_height() != 0) {
             tiles_height = 0;
             tiles_width = 0;
+
+            game.set_tile_height(0);
+            game.set_tile_width(0);
+            game.set_bomb_count(0);
         }
         // else if (game is not over && game has not been won)
             // openCell(x,y)
@@ -286,7 +305,6 @@ int main(int argc, char** argv) {
     initGL();
     
     // register keyboard press event processing function
-    // works for numbers, letters, spacebar, etc.
     glutKeyboardFunc(kbd);
     
     // handles mouse movement

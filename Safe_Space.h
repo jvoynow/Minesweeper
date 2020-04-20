@@ -23,6 +23,26 @@ public:
         return str;
     }
 
+/*    void draw(double x, double y, double width, double height, int row, int col) const override {
+        if (row % 2 == 0) {
+            ++col;
+        }
+        if (col % 2 == 1) {
+            glColor3f(colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b);
+        } else {
+            glColor3f(colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b);
+        }
+        glBegin(GL_QUADS);
+        glVertex2i( x + 0 * width, y + 0 * height);
+        glVertex2i(x + 1 * width, y + 0 * height);
+        glVertex2i(x + 1 * width, y + 1 * height);
+        glVertex2i(x + 0 * width, y + 1 * height);
+        glEnd();
+
+
+        // TODO: Draw number here
+    }*/
+
 };
 
 

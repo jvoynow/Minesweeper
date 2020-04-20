@@ -21,6 +21,7 @@ private:
     vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
     // vector<vector<Tile>> board; // user sees this, starts empty
     int game_dimension;
+    int tile_height = 0, tile_width = 0;
     int bomb_count;
 
 public:
@@ -33,6 +34,26 @@ public:
         completed_board = create_board();
         add_bombs();
         print(completed_board);
+    }
+
+    void set_tile_height(int tile_height) {
+        this->tile_height = tile_height;
+    }
+
+    void set_tile_width(int tile_width) {
+        this->tile_width = tile_width;
+    }
+
+    void set_bomb_count(int bomb_count) {
+        this->bomb_count = bomb_count;
+    }
+
+    int get_tile_width() const {
+        return tile_width;
+    }
+
+    int get_tile_height() const {
+        return tile_height;
     }
 
     vector<vector<unique_ptr<Tile>>> create_board() {
@@ -106,6 +127,21 @@ public:
         }
         cout << endl;
     }
+
+    /*void create_board(vector<vector<unique_ptr<Tile>>> &board, double height, double width, double padding) const{
+        double x = padding, y = 0;
+        double h = (height)/ tile_height;
+        double w = (width - padding)/ tile_width;
+
+        for (int row = 0; row < tile_height; row ++) {
+            for (int col = 0; col < tile_width; col ++) {
+                board[row][col]->draw(x, y, w, h, row, col);
+                x += w;
+            }
+            x = padding;
+            y += h;
+        }
+    }*/
 
 };
 
