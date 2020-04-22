@@ -13,12 +13,12 @@
 class Safe_Space : public Tile {
 public:
     Safe_Space() {
-        adjacent_bombs = 0;
+        adj_bombs = 0;
     }
 
     string tile_display() override {
         stringstream ss;
-        ss << get_adjacent_bombs();
+        ss << get_adj_bombs();
         string str = ss.str();
         return str;
     }

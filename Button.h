@@ -9,22 +9,18 @@ struct color {
 
 class Button {
 private:
-    color current_fill{}, original_fill{}, hover_fill{};
+    color current_fill, original_fill, hover_fill;
     double x1, x2, y1, y2;
     std::string text;
 public:
     Button();
     Button (color original, color hover_fill, double x1, double x2, double y1, double y2, std::string text);
 
-    color get_fill() const;
     std::string get_text() const;
 
     void set_current_fill(color fill);
-    void set_current_fill(double r, double g, double b);
     void set_original_fill(color fill);
-    void set_original_fill(double r, double g, double b);
     void set_hover_fill(color fill);
-    void set_hover_fill(double r, double g, double b);
 
     void set_x1(double x1);
     void set_x2(double x2);

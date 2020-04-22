@@ -1,13 +1,12 @@
-//
-// Created by voyno on 4/15/2020.
-//
-
 #ifndef PS_JV_GRAPHICS_FINAL_GAME_H
 #define PS_JV_GRAPHICS_FINAL_GAME_H
 
 #include "Bomb.h"
 #include "Safe_Space.h"
 #include "Tile.h"
+#include "Unselected_tile.h"
+#include "Selected_safe_tile.h"
+#include "Selected_bomb_tile.h"
 
 #include <iostream>
 #include <memory>
@@ -19,7 +18,7 @@ using namespace std;
 class Game {
 private:
     vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
-    // vector<vector<Tile>> board; // user sees this, starts empty
+    // vector<vector<unique_ptr<Tile>>> board; // user sees this, starts empty
     int game_dimension;
     int tile_height = 0, tile_width = 0;
     int bomb_count;
@@ -58,14 +57,21 @@ public:
 
     vector<vector<unique_ptr<Tile>>> create_board() {
         vector<vector<unique_ptr<Tile>>> new_board;
-        for (int i = 0; i < game_dimension; ++i) {
-
+        for (int y = 0; y < tile_height; ++y) {
+            // TODO: Remove row2
+            vector<unique_ptr<Tile>> row2;
             vector<unique_ptr<Tile>> row;
-            for (int j = 0; j < game_dimension; ++j) {
+            for (int x = 0; x < tile_width; ++x) {
+                // TODO: Remove adding safe space
                 Safe_Space safe_space;
-                row.push_back(move(make_unique<Safe_Space>(safe_space)));
+                row2.push_back(move(make_unique<Safe_Space>(safe_space)));
+
+
+                Unselected_tile unselected_tile(x,y);
+                row.push_back(move(make_unique<Unselected_tile>(unselected_tile)));
             }
-            new_board.push_back(move(row));
+            // TODO: Change to row
+            new_board.push_back(move(row2));
         }
         return new_board;
     }
@@ -78,8 +84,8 @@ public:
         int y; // column
 
         for (int i = 0; i < bomb_count; ++i) {
-            x = rand() % game_dimension;
-            y = rand() % game_dimension;
+            x = rand() % tile_width;
+            y = rand() % tile_height;
 
             Bomb bomb;
             unique_ptr<Bomb> unique_bomb_ptr = make_unique<Bomb>(bomb);
@@ -111,11 +117,11 @@ public:
     }
 
     void update_safe_spaces(int x, int y) {
-        int adjacent_bombs = completed_board[x][y]->get_adjacent_bombs();
+        int adjacent_bombs = completed_board[x][y]->get_adj_bombs();
         if (adjacent_bombs != -1) {
             adjacent_bombs++;
         }
-        completed_board[x][y]->set_adjacent_bombs(adjacent_bombs);
+        completed_board[x][y]->set_adj_bombs(adjacent_bombs);
     }
 
     void print(vector<vector<unique_ptr<Tile>>> &board) {

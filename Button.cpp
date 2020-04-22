@@ -59,33 +59,21 @@ void Button::stop_hover() {
     set_current_fill(original_fill);
 }
 
-color Button::get_fill() const {
-    return current_fill;
-}
 
 void Button::set_current_fill(color fill) {
     current_fill = fill;
 }
 
-void Button::set_current_fill(double r, double g, double b) {
-    current_fill = {r, g, b};
-}
 
 void Button::set_original_fill(color fill) {
     original_fill = fill;
 }
 
-void Button::set_original_fill(double r, double g, double b) {
-    original_fill = {r, g, b};
-}
 
 void Button::set_hover_fill(color fill) {
     hover_fill = fill;
 }
 
-void Button::set_hover_fill(double r, double g, double b) {
-    hover_fill = {r, g, b};
-}
 
 void Button::set_x1(double x1) {
     this->x1 = x1;

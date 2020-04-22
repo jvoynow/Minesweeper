@@ -142,8 +142,8 @@ void draw_tile(double x, double y, double w, double h, int column, int row) {
     glVertex2i(x + 0 * w, y + 1 * h);
     glEnd();
 
-    display_num(x + 0.5 * w, y + 0.5 * h ,7);
-
+    unsigned char num[] = "7";
+    display_num(x + (0.5 * w) - (0.5 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, num)), y + (0.5 * h) + (0.75 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, num)),7);
 }
 
 void title() {

@@ -15,7 +15,7 @@ Unselected_tile::Unselected_tile(int row, int column) {
 }
 
 
-void Unselected_tile::draw(double x, double y, double width, double height) const {
+void Unselected_tile::draw(double x, double y, double width, double height, int tile_width, int tile_height, double padding) const {
     int temp = column;
     if (row % 2 == 0) {
         ++temp;

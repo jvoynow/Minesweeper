@@ -12,7 +12,7 @@
 class Bomb : public Tile {
 public:
     Bomb() {
-        adjacent_bombs = -1;
+        adj_bombs = -1;
     }
 
     string tile_display() override {
