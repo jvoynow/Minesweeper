@@ -19,59 +19,51 @@ class Game {
 private:
     vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
     // vector<vector<unique_ptr<Tile>>> board; // user sees this, starts empty
-    int game_dimension;
-    int tile_height = 8, tile_width = 8;
+    int num_rows, num_cols;
     int bomb_count;
 
 public:
-    Game() {
-        game_dimension = 8;
-        bomb_count = 10;
+    Game(int num_rows, int num_cols, int bomb_count) {
+        this->num_rows = num_rows;
+        this->num_cols = num_cols;
+        this->bomb_count = bomb_count;
     }
 
-    void run() {
+    void initialize() {
         completed_board = create_board();
         add_bombs();
         print(completed_board);
     }
 
-    void set_tile_height(int tile_height) {
-        this->tile_height = tile_height;
+    void set_num_rows(int num_rows) {
+        this->num_rows = num_rows;
     }
 
-    void set_tile_width(int tile_width) {
-        this->tile_width = tile_width;
+    void set_num_cols(int num_cols) {
+        this->num_cols = num_cols;
     }
 
     void set_bomb_count(int bomb_count) {
         this->bomb_count = bomb_count;
     }
 
-    int get_tile_width() const {
-        return tile_width;
+    int get_num_rows() const {
+        return num_rows;
     }
 
-    int get_tile_height() const {
-        return tile_height;
+    int get_num_cols() const {
+        return num_cols;
     }
 
     vector<vector<unique_ptr<Tile>>> create_board() {
         vector<vector<unique_ptr<Tile>>> new_board;
-        for (int y = 0; y < tile_height; ++y) {
-            // TODO: Remove row2
-            vector<unique_ptr<Tile>> row2;
-            //vector<unique_ptr<Tile>> row;
-            for (int x = 0; x < tile_width; ++x) {
-                // TODO: Remove adding safe space
-                Safe_Space safe_space;
-                row2.push_back(move(make_unique<Safe_Space>(safe_space)));
-
-
-                //Unselected_tile unselected_tile(x,y);
-                //row.push_back(move(make_unique<Unselected_tile>(unselected_tile)));
+        for (int y = 0; y < num_rows; ++y) {
+            vector<unique_ptr<Tile>> row;
+            for (int x = 0; x < num_cols; ++x) {
+                Safe_Space space;
+                row.push_back(move(make_unique<Safe_Space>(space)));
             }
-            // TODO: Change to row
-            new_board.push_back(move(row2));
+            new_board.push_back(move(row));
         }
         return new_board;
     }
@@ -84,35 +76,39 @@ public:
         int y; // column
 
         for (int i = 0; i < bomb_count; ++i) {
-            x = rand() % tile_width;
-            y = rand() % tile_height;
+            x = rand() % num_rows;
+            y = rand() % num_cols;
 
-            Bomb bomb;
-            unique_ptr<Bomb> unique_bomb_ptr = make_unique<Bomb>(bomb);
-            completed_board[x][y] = move(unique_bomb_ptr);
-            update_safe_spaces_helper(x, y);
+            // check if bomb exists in given position
+            if (completed_board[x][y]->get_adj_bombs() != -1) {
+                Bomb bomb;
+                unique_ptr<Bomb> unique_bomb_ptr = make_unique<Bomb>(bomb);
+                completed_board[x][y] = move(unique_bomb_ptr);
+                update_safe_spaces_helper(x, y);
+            }
         }
     }
 
     void update_safe_spaces_helper(int x, int y) {
-        int index_out_of_bounds = game_dimension - 1;
+        int row_out_of_bounds = num_rows - 1;
+        int col_out_of_bounds = num_cols - 1;
 
         // edge cases for top three adjacent positions
         if (x > 0) {
             if (y > 0) { update_safe_spaces(x - 1, y - 1); } // top left
-            if (y < index_out_of_bounds) { update_safe_spaces(x - 1, y + 1); } // top right
+            if (y < col_out_of_bounds) { update_safe_spaces(x - 1, y + 1); } // top right
             update_safe_spaces(x - 1, y); // top
         }
 
         // edge cases for bottom three adjacent positions
-        if (x < index_out_of_bounds) {
-            if (y < index_out_of_bounds) { update_safe_spaces(x + 1, y + 1); } // bottom right
+        if (x < row_out_of_bounds) {
+            if (y < col_out_of_bounds) { update_safe_spaces(x + 1, y + 1); } // bottom right
             if (y > 0) { update_safe_spaces(x + 1, y - 1); } // bottom left
             update_safe_spaces(x + 1, y); // bottom
         }
 
         // edge cases for left and right adjacent positions
-        if (y < index_out_of_bounds) { update_safe_spaces(x, y + 1); }  // right
+        if (y < col_out_of_bounds) { update_safe_spaces(x, y + 1); }  // right
         if (y > 0) { update_safe_spaces(x, y - 1); }                    // left
     }
 

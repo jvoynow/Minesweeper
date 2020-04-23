@@ -7,8 +7,8 @@ using namespace std;
 
 int main() {
 
-    Game game;
-    game.run();
+    Game game(4,4,10);
+    game.initialize();
 
     return 0;
 }
