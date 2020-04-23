@@ -20,7 +20,7 @@ private:
     vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
     // vector<vector<unique_ptr<Tile>>> board; // user sees this, starts empty
     int game_dimension;
-    int tile_height = 0, tile_width = 0;
+    int tile_height = 8, tile_width = 8;
     int bomb_count;
 
 public:
