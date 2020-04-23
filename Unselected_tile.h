@@ -10,7 +10,7 @@ public:
     Unselected_tile(int row, int column);
 
 
-    void draw(double x, double y, double width, double height, int tile_width, int tile_height, double padding) const override;
+    //void draw(double x, double y, double width, double height, int tile_width, int tile_height, double padding) const override;
 };
 
 

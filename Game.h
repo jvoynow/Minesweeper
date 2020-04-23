@@ -60,15 +60,15 @@ public:
         for (int y = 0; y < tile_height; ++y) {
             // TODO: Remove row2
             vector<unique_ptr<Tile>> row2;
-            vector<unique_ptr<Tile>> row;
+            //vector<unique_ptr<Tile>> row;
             for (int x = 0; x < tile_width; ++x) {
                 // TODO: Remove adding safe space
                 Safe_Space safe_space;
                 row2.push_back(move(make_unique<Safe_Space>(safe_space)));
 
 
-                Unselected_tile unselected_tile(x,y);
-                row.push_back(move(make_unique<Unselected_tile>(unselected_tile)));
+                //Unselected_tile unselected_tile(x,y);
+                //row.push_back(move(make_unique<Unselected_tile>(unselected_tile)));
             }
             // TODO: Change to row
             new_board.push_back(move(row2));
