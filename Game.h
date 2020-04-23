@@ -18,7 +18,7 @@ using namespace std;
 class Game {
 private:
     vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
-    // vector<vector<unique_ptr<Tile>>> board; // user sees this, starts empty
+    vector<vector<unique_ptr<Tile>>> user_interface_board; // user sees this, starts empty
     int num_rows, num_cols;
     int bomb_count;
 
@@ -30,9 +30,13 @@ public:
     }
 
     void initialize() {
-        completed_board = create_board();
+        completed_board = create_board(false);
+        user_interface_board = create_board(true);
+
         add_bombs();
         print(completed_board);
+
+        print(user_interface_board);
     }
 
     void set_num_rows(int num_rows) {
@@ -55,13 +59,18 @@ public:
         return num_cols;
     }
 
-    vector<vector<unique_ptr<Tile>>> create_board() {
+    vector<vector<unique_ptr<Tile>>> create_board(bool blank) {
         vector<vector<unique_ptr<Tile>>> new_board;
         for (int y = 0; y < num_rows; ++y) {
             vector<unique_ptr<Tile>> row;
             for (int x = 0; x < num_cols; ++x) {
-                Safe_Space space;
-                row.push_back(move(make_unique<Safe_Space>(space)));
+                if (blank) {
+                    Unselected_tile unselected;
+                    row.push_back(move(make_unique<Unselected_tile>(unselected)));
+                } else {
+                    Safe_Space space;
+                    row.push_back(move(make_unique<Safe_Space>(space)));
+                }
             }
             new_board.push_back(move(row));
         }
