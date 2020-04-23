@@ -10,6 +10,7 @@ using namespace std;
 class Tile {
 protected:
     bool display;
+    bool local_search_flag;
 
     int adj_bombs;
     int row, column;
@@ -18,10 +19,15 @@ protected:
 public:
     Tile() {
         display = false;
+        local_search_flag = false;
     }
 
     bool get_display() {
         return display;
+    }
+
+    bool get_local_search_flag() const {
+        return local_search_flag;
     }
 
     int get_row() const {
@@ -34,6 +40,10 @@ public:
 
     int get_adj_bombs() {
         return adj_bombs;
+    }
+
+    void set_local_search_flag(bool flag) {
+        local_search_flag = flag;
     }
 
     /*void set_current_fill(color fill) {

@@ -1,17 +1,12 @@
 #include "Game.h"
-#include "Unselected_tile.h"
-
-#include <iostream>
-#include <vector>
 
 using namespace std;
 
 int main() {
 
-    Game game(4,4,10);
+    Game game(8,8,10);
     game.initialize();
-
-    Unselected_tile unselected;
+    game.play();
 
     return 0;
 }

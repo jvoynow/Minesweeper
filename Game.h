@@ -2,11 +2,13 @@
 #define PS_JV_GRAPHICS_FINAL_GAME_H
 
 #include "Bomb.h"
+#include "Flag.h"
+#include "Selected_safe_tile.h"
+#include "Selected_bomb_tile.h"
 #include "Safe_Space.h"
 #include "Tile.h"
 #include "Unselected_tile.h"
-#include "Selected_safe_tile.h"
-#include "Selected_bomb_tile.h"
+
 
 #include <iostream>
 #include <memory>
@@ -29,16 +31,6 @@ public:
         this->bomb_count = bomb_count;
     }
 
-    void initialize() {
-        completed_board = create_board(false);
-        user_interface_board = create_board(true);
-
-        add_bombs();
-        print(completed_board);
-
-        print(user_interface_board);
-    }
-
     void set_num_rows(int num_rows) {
         this->num_rows = num_rows;
     }
@@ -59,6 +51,109 @@ public:
         return num_cols;
     }
 
+    void initialize() {
+        completed_board = create_board(false);
+        user_interface_board = create_board(true);
+    }
+
+    void play() {
+        int row = 0, col = 0;
+        string input = "w";
+
+        print(user_interface_board, row, col);
+        input = get_position(user_interface_board, row, col, input);
+        add_bombs(row, col);
+
+        while (input != "e" and input != "b") {
+            input = update_board(user_interface_board, row, col, input);
+            if (input != "b") {
+                print(user_interface_board, row, col);
+                input = get_position(user_interface_board, row, col, input);
+            }
+        }
+
+        print(user_interface_board, row, col);
+    }
+
+    static string get_position(vector<vector<unique_ptr<Tile>>> &current_board, int &row, int &col, string input) {
+        cout << "Input move:";
+        cin >> input;
+
+        while (input != "c" and input !=  "f" and input != "e") {
+            move_cursor(row, col, input);
+            print(current_board, row, col);
+            cout << "Input move:";
+            cin >> input;
+        }
+        return input;
+    }
+
+    static void move_cursor(int &row, int &col, string &input) {
+        if(input == "w") {row--;}
+        if(input == "a") {col--;}
+        if(input == "s") {row++;}
+        if(input == "d") {col++;}
+    }
+
+    string update_board(vector<vector<unique_ptr<Tile>>> &current_board, int row, int col, string &input) {
+        if (input == "c") {
+            input = click_user_board(row, col, input);
+        } else {
+            flag_user_board(row, col);
+        }
+        return input;
+    }
+
+    void flag_user_board(int row, int col) {
+        Flag flag;
+        user_interface_board[row][col] = move(make_unique<Flag>(flag));
+    }
+
+    string click_user_board(int row, int col, string input) {
+        if (completed_board[row][col]->get_adj_bombs() == -1) {
+            user_interface_board[row][col] = move(completed_board[row][col]);
+           input = "b";
+        } else {
+            vector<vector<int>> coords;
+            zero_search(row, col, coords);
+        }
+
+        return input;
+    }
+
+    void zero_search(int row, int col, vector<vector<int>> &coords) {
+        if (row > num_rows - 1 or col > num_cols - 1 or row < 0 or col < 0) {
+            return;
+        }
+        if (exists_in_history(row, col, coords)) {
+            return;
+        } else {
+            coords.push_back({row, col});
+        }
+        if (completed_board[row][col]->get_adj_bombs() == 0) {
+            zero_search(row, col + 1, coords);
+            zero_search(row, col - 1, coords);
+            zero_search(row + 1, col, coords);
+            zero_search(row + 1, col + 1, coords);
+            zero_search(row + 1, col - 1, coords);
+            zero_search(row - 1, col, coords);
+            zero_search(row - 1, col + 1, coords);
+            zero_search(row - 1, col - 1, coords);
+        }
+        user_interface_board[row][col] = move(completed_board[row][col]);
+    }
+
+    static bool exists_in_history(int row, int col, vector<vector<int>> coords) {
+        bool exists = false;
+        for (int i = 0; i < coords.size(); ++i) {
+            if (coords[i][0] == row and coords[i][1] == col) {
+                exists = true;
+            }
+        }
+
+        return exists;
+    }
+
     vector<vector<unique_ptr<Tile>>> create_board(bool blank) {
         vector<vector<unique_ptr<Tile>>> new_board;
         for (int y = 0; y < num_rows; ++y) {
@@ -77,16 +172,29 @@ public:
         return new_board;
     }
 
-    void add_bombs() {
-        vector<int> bomb_coordinates;
+    void add_bombs(int row, int col) {
+        vector<vector<int>> invalid_positions = get_invalid_positions(row, col);
 
         srand(time(nullptr));
         int x; // row
         int y; // column
 
         for (int i = 0; i < bomb_count; ++i) {
-            x = rand() % num_rows;
-            y = rand() % num_cols;
+            while (true) {
+
+                bool found = false;
+                x = rand() % num_rows;
+                y = rand() % num_cols;
+
+                for (vector<int> &coord : invalid_positions) {
+                    if (coord[0] == x and coord[1] == y) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    break;
+                }
+            }
 
             // check if bomb exists in given position
             if (completed_board[x][y]->get_adj_bombs() != -1) {
@@ -96,6 +204,21 @@ public:
                 update_safe_spaces_helper(x, y);
             }
         }
+    }
+
+    static vector<vector<int>> get_invalid_positions(int row, int col) {
+        vector<vector<int>> invalid_positions;
+        invalid_positions.push_back({row, col});
+        invalid_positions.push_back({row, col + 1});
+        invalid_positions.push_back({row, col - 1});
+        invalid_positions.push_back({row + 1, col + 1});
+        invalid_positions.push_back({row + 1, col - 1});
+        invalid_positions.push_back({row + 1, col});
+        invalid_positions.push_back({row - 1, col + 1});
+        invalid_positions.push_back({row - 1, col - 1});
+        invalid_positions.push_back({row - 1, col});
+
+        return invalid_positions;
     }
 
     void update_safe_spaces_helper(int x, int y) {
@@ -129,10 +252,15 @@ public:
         completed_board[x][y]->set_adj_bombs(adjacent_bombs);
     }
 
-    void print(vector<vector<unique_ptr<Tile>>> &board) {
+    static void print(vector<vector<unique_ptr<Tile>>> &board, int row, int col) {
         for (int i = 0; i < board.size(); ++i) {
             for (int j = 0; j < board[i].size(); ++j) {
-                cout << " | " << board[i][j]->tile_display();
+                if (i == row && j == col) {
+                    cout << " |*" ;
+                } else {
+                    cout << " | ";
+                }
+                cout << board[i][j]->tile_display();
             }
             cout << " |" << endl;
         }
