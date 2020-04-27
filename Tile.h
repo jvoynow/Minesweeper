@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include "graphics.h"
 
 
 using namespace std;
@@ -14,8 +15,8 @@ protected:
 
     int adj_bombs;
     int row, column;
-    //color current_fill, original_fill, hover_fill;
-    //double x1, x2, y1, y2;
+    color current_fill, original_fill, hover_fill;
+    double x1, x2, y1, y2;
 public:
     Tile() {
         display = false;
@@ -46,7 +47,7 @@ public:
         local_search_flag = flag;
     }
 
-    /*void set_current_fill(color fill) {
+    void set_current_fill(color fill) {
         current_fill = fill;
     }
 
@@ -57,7 +58,7 @@ public:
     void set_hover_fill(color fill) {
         hover_fill = fill;
     }
-*/
+
     void set_display(bool display) {
         this->display = display;
     }
@@ -72,6 +73,22 @@ public:
 
     void set_column(int column) {
         this->column = column;
+    }
+
+    void set_x1(double x1) {
+        this->x1 = x1;
+    }
+
+    void set_x2(double x2) {
+        this->x2 = x2;
+    }
+
+    void set_y1(double y1) {
+        this->y1 = y1;
+    }
+
+    void set_y2(double y2) {
+        this->y2 = y2;
     }
 
     /*void hover() {
@@ -90,21 +107,11 @@ public:
         return "-";
     }
 
-/*
     bool is_overlapping(int x, int y) const {
         return x >= x1 && y >= y1 && x <= x2 && y <= y2;
     }
-*/
 
-/*    virtual void draw(double x, double y, double width, double height, int tile_width, int tile_height, double padding) const {
-        glColor3f(current_fill.r, current_fill.g,current_fill.b);
-        glBegin(GL_QUADS);
-        glVertex2i(x + 0 * ((width - padding)/ tile_width), y + 0 * (height / tile_height));
-        glVertex2i(x + 1 * ((width - padding)/ tile_width), y + 0 * (height / tile_height));
-        glVertex2i(x + 1 * ((width - padding)/ tile_width), y + 1 * (height / tile_height));
-        glVertex2i(x + 0 * ((width - padding)/ tile_width), y + 1 * (height / tile_height));
-        glEnd();
-    }*/
+    virtual void draw() const = 0;
 
 };
 

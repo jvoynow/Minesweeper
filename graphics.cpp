@@ -6,10 +6,10 @@
 using namespace std;
 
 GLdouble width, height, padding;
-int tiles_width = 0, tiles_height = 0;
+int num_columns = 0, num_rows = 0;
 int wd;
 Button easy, intermediate, expert, main_menu;
-Game game;
+Game game(0,0,0);
 
 
 void init() {
@@ -44,24 +44,32 @@ void display() {
 
     title();
 
-    if (tiles_width == 0 && tiles_height == 0) {
+    if (num_rows == 0 && num_columns == 0) {
         create_difficulty_buttons();
-    } else if (tiles_width != 0 && tiles_height != 0){
+    } else {
         create_main_menu_button();
-    }
+        game.initialize();
+        game.play();
 
-    double x = padding, y = 0;
-    double h = (height)/ tiles_height;
-    double w = (width - padding)/ tiles_width;
+        double x = padding, y = 0;
+        double h = (height) / num_rows;
+        double w = (width - padding) / num_columns;
 
 
-    for (int row = 0; row < tiles_height; row++) {
-        for (int column = 0; column < tiles_width; column++) {
-            draw_tile(x, y, w, h, column, row);
-            x += w;
+        for (vector<unique_ptr<Tile>> &row_tiles : game.get_board()) {
+            for (unique_ptr<Tile> &tile : row_tiles) {
+                tile->set_x1(x);
+                tile->set_x2(x + w);
+                tile->set_y1(y);
+                tile->set_y2(y + h);
+
+                tile->draw();
+
+                x += w;
+            }
+            x = padding;
+            y += h;
         }
-        x = padding;
-        y += h;
     }
 
     display_creators();
@@ -126,26 +134,6 @@ void create_difficulty_buttons() {
 }
 
 
-void draw_tile(double x, double y, double w, double h, int column, int row) {
-    if (row % 2 == 0) {
-        ++column;
-    }
-    if (column % 2 == 1) {
-        glColor3f(colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b);
-    } else {
-        glColor3f(colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b);
-    }
-    glBegin(GL_QUADS);
-    glVertex2i( x + 0 * w, y + 0 * h);
-    glVertex2i(x + 1 * w, y + 0 * h);
-    glVertex2i(x + 1 * w, y + 1 * h);
-    glVertex2i(x + 0 * w, y + 1 * h);
-    glEnd();
-
-    unsigned char num[] = "7";
-    display_num(x + (0.5 * w) - (0.5 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, num)), y + (0.5 * h) + (0.75 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, num)),7);
-}
-
 void title() {
     unsigned char title[] = "Minesweeper";
     int w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, title);
@@ -154,14 +142,6 @@ void title() {
     for (char c : title) {
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
     }
-}
-
-
-void display_num(double x, double y, int num) {
-    glColor3f(colors[FIVE].r, colors[FIVE].g, colors[FIVE].b);
-    glRasterPos2i(x,y);
-    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, '0' + num);
-    glEnd();
 }
 
 void display_creators() {
@@ -237,33 +217,33 @@ void cursor(int x, int y) {
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        if (easy.is_overlapping(x,y) && game.get_tile_width() == 0 && game.get_tile_height() == 0) {
-            tiles_height = 8;
-            tiles_width = 8;
+        if (easy.is_overlapping(x,y) && game.get_num_rows() == 0 && game.get_num_cols() == 0) {
+            num_columns = 8;
+            num_rows = 8;
 
-            game.set_tile_width(8);
-            game.set_tile_height(8);
+            game.set_num_rows(8);
+            game.set_num_rows(8);
             game.set_bomb_count(10);
-        } else if (intermediate.is_overlapping(x,y) && game.get_tile_width() == 0 && game.get_tile_height() == 0) {
-            tiles_height = 16;
-            tiles_width = 16;
+        } else if (intermediate.is_overlapping(x,y) && game.get_num_rows() == 0 && game.get_num_cols() == 0) {
+            num_columns = 16;
+            num_rows = 16;
 
-            game.set_tile_width(16);
-            game.set_tile_height(16);
+            game.set_num_rows(16);
+            game.set_num_cols(16);
             game.set_bomb_count(40);
-        } else if (expert.is_overlapping(x,y) && game.get_tile_width() == 0 && game.get_tile_height() == 0) {
-            tiles_height = 16;
-            tiles_width = 30;
+        } else if (expert.is_overlapping(x,y) && game.get_num_cols() == 0 && game.get_num_rows() == 0) {
+            num_columns = 16;
+            num_rows = 30;
 
-            game.set_tile_width(30);
-            game.set_tile_height(16);
+            game.set_num_rows(30);
+            game.set_num_cols(16);
             game.set_bomb_count(99);
-        } else if (main_menu.is_overlapping(x, y) && game.get_tile_width() != 0 && game.get_tile_height() != 0) {
-            tiles_height = 0;
-            tiles_width = 0;
+        } else if (main_menu.is_overlapping(x, y) && game.get_num_cols() != 0 && game.get_num_rows() != 0) {
+            num_columns = 0;
+            num_rows = 0;
 
-            game.set_tile_height(0);
-            game.set_tile_width(0);
+            game.set_num_rows(0);
+            game.set_num_cols(0);
             game.set_bomb_count(0);
         }
         // else if (game is not over && game has not been won)

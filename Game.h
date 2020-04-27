@@ -3,8 +3,6 @@
 
 #include "Bomb.h"
 #include "Flag.h"
-#include "Selected_safe_tile.h"
-#include "Selected_bomb_tile.h"
 #include "Safe_Space.h"
 #include "Tile.h"
 #include "Unselected_tile.h"
@@ -49,6 +47,10 @@ public:
 
     int get_num_cols() const {
         return num_cols;
+    }
+
+    vector<vector<unique_ptr<Tile>>> get_board() const {
+        return user_interface_board;
     }
 
     void initialize() {
@@ -266,21 +268,6 @@ public:
         }
         cout << endl;
     }
-
-    /*void create_board(vector<vector<unique_ptr<Tile>>> &board, double height, double width, double padding) const{
-        double x = padding, y = 0;
-        double h = (height)/ tile_height;
-        double w = (width - padding)/ tile_width;
-
-        for (int row = 0; row < tile_height; row ++) {
-            for (int col = 0; col < tile_width; col ++) {
-                board[row][col]->draw(x, y, w, h, row, col);
-                x += w;
-            }
-            x = padding;
-            y += h;
-        }
-    }*/
 
 };
 
