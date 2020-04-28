@@ -107,30 +107,28 @@ public:
         if(input == "d") {col++;}
     }
 
-    string update_board(vector<vector<unique_ptr<Tile>>> &current_board, int row, int col, string &input) {
-        if (input == "c") {
-            input = click_user_board(row, col, input);
-        } else {
-            flag_user_board(row, col);
-        }
-        return input;
-    }
-
+    // Todo this is the logic for flagging
     void flag_user_board(int row, int col) {
         Flag flag;
         user_interface_board[row][col] = move(make_unique<Flag>(flag));
     }
 
-    string click_user_board(int row, int col, string input) {
+    // Todo this is the logic for clicking on the board
+    void click_user_board(int row, int col) {
         if (completed_board[row][col]->get_adj_bombs() == -1) {
             user_interface_board[row][col] = move(completed_board[row][col]);
-            input = "b";
         } else {
             vector<vector<int>> coords;
             zero_search(row, col, coords);
         }
+    }
 
-        return input;
+    void update_board_for_win() {
+        for (int i = 0; i < num_rows; ++i) {
+            for (int j = 0; j < num_cols; ++j) {
+
+            }
+        }
     }
 
     void zero_search(int row, int col, vector<vector<int>> &coords) {
