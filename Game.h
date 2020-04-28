@@ -4,7 +4,7 @@
 #include "Bomb.h"
 #include "Flag.h"
 #include "Safe_Space.h"
-#include "Tile.h"
+#include "Tile_no_graphics.h"
 #include "Unselected_tile.h"
 
 
@@ -17,8 +17,8 @@ using namespace std;
 
 class Game {
 private:
-    vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
-    vector<vector<unique_ptr<Tile>>> user_interface_board; // user sees this, starts empty
+    vector<vector<unique_ptr<Tile_no_graphics>>> completed_board; // master board data/info
+    vector<vector<unique_ptr<Tile_no_graphics>>> user_interface_board; // user sees this, starts empty
     int num_rows, num_cols;
     int bomb_count;
     bool won, game_over;
@@ -63,8 +63,7 @@ public:
         return num_cols;
     }
 
-
-    vector<vector<unique_ptr<Tile>>> get_board() const {
+    vector<vector<unique_ptr<Tile_no_graphics>>> get_board() const {
         return user_interface_board;
     }
 
@@ -87,7 +86,7 @@ public:
         //print(user_interface_board, row, col);
     }
 
-    static string get_position(vector<vector<unique_ptr<Tile>>> &current_board, int &row, int &col, string input) {
+    static string get_position(vector<vector<unique_ptr<Tile_no_graphics>>> &current_board, int &row, int &col, string input) {
         //cout << "Input move:";
         cin >> input;
 
@@ -107,7 +106,7 @@ public:
         if(input == "d") {col++;}
     }
 
-    string update_board(vector<vector<unique_ptr<Tile>>> &current_board, int row, int col, string &input) {
+    string update_board(vector<vector<unique_ptr<Tile_no_graphics>>> &current_board, int row, int col, string &input) {
         if (input == "c") {
             input = click_user_board(row, col, input);
         } else {
@@ -124,6 +123,7 @@ public:
     string click_user_board(int row, int col, string input) {
         if (completed_board[row][col]->get_adj_bombs() == -1) {
             user_interface_board[row][col] = move(completed_board[row][col]);
+            game_over = true;
             input = "b";
         } else {
             vector<vector<int>> coords;
@@ -166,10 +166,10 @@ public:
         return exists;
     }
 
-    vector<vector<unique_ptr<Tile>>> create_board(bool blank) {
-        vector<vector<unique_ptr<Tile>>> new_board;
+    vector<vector<unique_ptr<Tile_no_graphics>>> create_board(bool blank) {
+        vector<vector<unique_ptr<Tile_no_graphics>>> new_board;
         for (int y = 0; y < num_rows; ++y) {
-            vector<unique_ptr<Tile>> row;
+            vector<unique_ptr<Tile_no_graphics>> row;
             for (int x = 0; x < num_cols; ++x) {
                 if (blank) {
                     Unselected_tile unselected;
@@ -264,7 +264,7 @@ public:
         completed_board[x][y]->set_adj_bombs(adjacent_bombs);
     }
 
-/*    static void print(vector<vector<unique_ptr<Tile>>> &board, int row, int col) {
+/*    static void print(vector<vector<unique_ptr<Tile_no_graphics>>> &board, int row, int col) {
         for (int i = 0; i < board.size(); ++i) {
             for (int j = 0; j < board[i].size(); ++j) {
                 if (i == row && j == col) {

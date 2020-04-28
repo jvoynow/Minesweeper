@@ -1,29 +1,24 @@
-#ifndef PS_JV_GRAPHICS_FINAL_FLAG_H
-#define PS_JV_GRAPHICS_FINAL_FLAG_H
+#ifndef PS_JV_GRAPHICS_FINAL_SELECTED_BOMB_H
+#define PS_JV_GRAPHICS_FINAL_SELECTED_BOMB_H
 
-#include "Tile_no_graphics.h"
+#include "Tile.h"
 
-#include <string>
-
-class Flag : public Tile_no_graphics {
+class Bomb : public Tile {
 public:
-    Flag() {
+    Bomb() {
+        adj_bombs = -1;
         int temp = column;
         if (row % 2 == 0) {
             ++temp;
         }
         if (temp % 2 == 1) {
-            original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-            current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+            original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+            current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
 
         } else {
-            original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-            current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+            original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+            current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
         }
-    }
-
-    string tile_display() override {
-        return ">";
     }
 
     void draw() const override {
@@ -36,10 +31,9 @@ public:
         glEnd();
 
 
-        // TODO: Draw Flag here
-
-        unsigned char filler[] = "12";
-        int num = 12;
+        // TODO: Draw Bomb here
+        unsigned char filler[] = "10";
+        int num = 10;
         glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
         glRasterPos2i(x1 + (0.5 * (x2 - x1)) - (0.5 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, filler)),
                       y1 + (0.5 * (y2 - y1)) + (0.75 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, filler)));
@@ -48,4 +42,4 @@ public:
     }
 };
 
-#endif //PS_JV_GRAPHICS_FINAL_FLAG_H
+#endif //PS_JV_GRAPHICS_FINAL_SELECTED_BOMB_H

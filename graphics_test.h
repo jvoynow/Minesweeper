@@ -52,7 +52,7 @@ void create_main_menu_button();
 
 void display_creators();
 
-enum Color {
+/*enum Color {
     DARK_GREEN,
     LIGHT_GREEN,
     DARK_BROWN,
@@ -92,7 +92,7 @@ static const struct {
         {220.0/255.0, 220.0/255.0, 220.0/255.0}, // White hover
         {0, 0, 0}, // Black
         {92.0/255.0,134.0/255.0,92.0/255.0}, // Menu Background
-};
+};*/
 
 
 

@@ -1,4 +1,4 @@
-#include "graphics.h"
+#include "graphics_test.h"
 #include "Game.h"
 #include <iostream>
 #include <vector>
@@ -56,8 +56,8 @@ void display() {
         double w = (width - padding) / num_columns;
 
 
-        for (vector<unique_ptr<Tile>> &row_tiles : game.get_board()) {
-            for (unique_ptr<Tile> &tile : row_tiles) {
+        for (vector<unique_ptr<Tile_no_graphics>> &row_tiles : game.get_board()) {
+            for (unique_ptr<Tile_no_graphics> &tile : row_tiles) {
                 tile->set_x1(x);
                 tile->set_x2(x + w);
                 tile->set_y1(y);
@@ -202,8 +202,8 @@ void cursor(int x, int y) {
         main_menu.stop_hover();
     }
 
-    for (vector<unique_ptr<Tile>> &row_tiles : game.get_board()) {
-        for (unique_ptr<Tile> &tile : row_tiles) {
+    for (vector<unique_ptr<Tile_no_graphics>> &row_tiles : game.get_board()) {
+        for (unique_ptr<Tile_no_graphics> &tile : row_tiles) {
             if(tile->is_overlapping(x,y)) {
                 tile->hover();
             } else {
@@ -249,8 +249,8 @@ void mouse(int button, int state, int x, int y) {
             game.set_num_cols(0);
             game.set_bomb_count(0);
         } else if (!game.is_won() && !game.is_over()) {
-            for (vector<unique_ptr<Tile>> &row_tiles : game.get_board()) {
-                for (unique_ptr<Tile> &tile : row_tiles) {
+            for (vector<unique_ptr<Tile_no_graphics>> &row_tiles : game.get_board()) {
+                for (unique_ptr<Tile_no_graphics> &tile : row_tiles) {
                     if(tile->is_overlapping(x,y)) {
                         game.click_user_board(tile->get_row(), tile->get_column(), "");
                     }
@@ -262,8 +262,8 @@ void mouse(int button, int state, int x, int y) {
             // openCell(x,y)
 
     } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game.is_over() && !game.is_won()) {
-        for (vector<unique_ptr<Tile>> &row_tiles : game.get_board()) {
-            for (unique_ptr<Tile> &tile : row_tiles) {
+        for (vector<unique_ptr<Tile_no_graphics>> &row_tiles : game.get_board()) {
+            for (unique_ptr<Tile_no_graphics> &tile : row_tiles) {
                 if(tile->is_overlapping(x,y)) {
                     game.flag_user_board(tile->get_row(), tile->get_column());
                 }

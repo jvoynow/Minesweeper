@@ -1,6 +1,5 @@
-#ifndef PS_JV_GRAPHICS_FINAL_TILE_H
-#define PS_JV_GRAPHICS_FINAL_TILE_H
-
+#ifndef PS_JV_GRAPHICS_FINAL_TILE_NO_GRAPHICS_H
+#define PS_JV_GRAPHICS_FINAL_TILE_NO_GRAPHICS_H
 
 #include <iostream>
 #include <string>
@@ -9,7 +8,7 @@
 
 using namespace std;
 
-class Tile {
+class Tile_no_graphics {
 protected:
     bool display;
     bool local_search_flag;
@@ -19,7 +18,7 @@ protected:
     color current_fill, original_fill, hover_fill;
     double x1, x2, y1, y2;
 public:
-    Tile() {
+    Tile_no_graphics() {
         display = false;
         local_search_flag = false;
     }
@@ -104,6 +103,9 @@ public:
         set_adj_bombs(get_adj_bombs() + 1);
     }
 
+    virtual string tile_display() {
+        return "-";
+    }
 
     bool is_overlapping(int x, int y) const {
         return x >= x1 && y >= y1 && x <= x2 && y <= y2;
@@ -113,4 +115,4 @@ public:
 
 };
 
-#endif //PS_JV_GRAPHICS_FINAL_TILE_H
+#endif //PS_JV_GRAPHICS_FINAL_TILE_NO_GRAPHICS_H

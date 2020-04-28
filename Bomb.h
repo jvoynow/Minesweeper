@@ -1,11 +1,11 @@
 #ifndef PS_JV_GRAPHICS_FINAL_BOMB_H
 #define PS_JV_GRAPHICS_FINAL_BOMB_H
 
-#include "Tile.h"
+#include "Tile_no_graphics.h"
 
 #include <string>
 
-class Bomb : public Tile {
+class Bomb : public Tile_no_graphics {
 public:
     Bomb() {
         adj_bombs = -1;

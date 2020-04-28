@@ -1,11 +1,9 @@
-#ifndef PS_JV_GRAPHICS_FINAL_FLAG_H
-#define PS_JV_GRAPHICS_FINAL_FLAG_H
+#ifndef PS_JV_GRAPHICS_FINAL_UNSELECTED_FLAG_H
+#define PS_JV_GRAPHICS_FINAL_UNSELECTED_FLAG_H
 
-#include "Tile_no_graphics.h"
+#include "Tile.h"
 
-#include <string>
-
-class Flag : public Tile_no_graphics {
+class Flag : public Tile {
 public:
     Flag() {
         int temp = column;
@@ -20,10 +18,6 @@ public:
             original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
             current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
         }
-    }
-
-    string tile_display() override {
-        return ">";
     }
 
     void draw() const override {
@@ -48,4 +42,4 @@ public:
     }
 };
 
-#endif //PS_JV_GRAPHICS_FINAL_FLAG_H
+#endif //PS_JV_GRAPHICS_FINAL_UNSELECTED_FLAG_H

@@ -1,12 +1,9 @@
-#ifndef PS_JV_GRAPHICS_FINAL_SAFE_SPACE_H
-#define PS_JV_GRAPHICS_FINAL_SAFE_SPACE_H
+#ifndef PS_JV_GRAPHICS_FINAL_SELECTED_SAFE_H
+#define PS_JV_GRAPHICS_FINAL_SELECTED_SAFE_H
 
-#include "Tile_no_graphics.h"
+#include "Tile.h"
 
-#include <string>
-#include <sstream>
-
-class Safe_Space : public Tile_no_graphics {
+class Safe_Space : public Tile {
 public:
     Safe_Space() {
         adj_bombs = 0;
@@ -22,13 +19,6 @@ public:
             original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
             current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
         }
-    }
-
-    string tile_display() override {
-        stringstream ss;
-        ss << get_adj_bombs();
-        string str = ss.str();
-        return str;
     }
 
     void draw() const override {
@@ -68,5 +58,4 @@ public:
 
 };
 
-
-#endif //PS_JV_GRAPHICS_FINAL_SAFE_SPACE_H
+#endif //PS_JV_GRAPHICS_FINAL_SELECTED_SAFE_H
