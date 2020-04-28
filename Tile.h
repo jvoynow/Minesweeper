@@ -91,13 +91,13 @@ public:
         this->y2 = y2;
     }
 
-    /*void hover() {
+    void hover() {
         set_current_fill(hover_fill);
     }
 
     void stop_hover() {
         set_current_fill(original_fill);
-    }*/
+    }
 
     void add_adj_bomb() {
         set_adj_bombs(get_adj_bombs() + 1);

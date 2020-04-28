@@ -34,8 +34,6 @@ void display();
 // Trap and process alphanumeric keyboard events
 void kbd(unsigned char key, int x, int y);
 
-// Trap and process special keyboard events
-void kbdS(int key, int x, int y);
 
 // Handle "mouse cursor moved" events
 void cursor(int x, int y);
@@ -46,11 +44,7 @@ void timer(int dummy);
 // Handle mouse button pressed and released events
 void mouse(int button, int state, int x, int y);
 
-void draw_tile(double x, double y, double w, double h, int column, int row);
-
 void title();
-
-void display_num(double x, double y, int num);
 
 void create_difficulty_buttons();
 

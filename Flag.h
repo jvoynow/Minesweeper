@@ -8,6 +8,18 @@
 class Flag : public Tile {
 public:
     Flag() {
+        int temp = column;
+        if (row % 2 == 0) {
+            ++temp;
+        }
+        if (temp % 2 == 1) {
+            original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+            current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+
+        } else {
+            original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+            current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+        }
     }
 
     string tile_display() override {
@@ -15,15 +27,7 @@ public:
     }
 
     void draw() const override {
-        int temp = column;
-        if (row % 2 == 0) {
-            ++temp;
-        }
-        if (temp % 2 == 1) {
-            glColor3f(colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b);
-        } else {
-            glColor3f(colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b);
-        }
+        glColor3f(current_fill.r, current_fill.g, current_fill.b);
         glBegin(GL_QUADS);
         glVertex2i(x1, y1);
         glVertex2i(x2, y1);

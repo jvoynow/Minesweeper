@@ -10,6 +10,18 @@ class Safe_Space : public Tile {
 public:
     Safe_Space() {
         adj_bombs = 0;
+        int temp = column;
+        if (row % 2 == 0) {
+            ++temp;
+        }
+        if (temp % 2 == 1) {
+            original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+            current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+
+        } else {
+            original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+            current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+        }
     }
 
     string tile_display() override {
@@ -20,15 +32,7 @@ public:
     }
 
     void draw() const override {
-        int temp = column;
-        if (row % 2 == 0) {
-            ++temp;
-        }
-        if (temp % 2 == 1) {
-            glColor3f(colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g, colors[LIGHT_BROWN].b);
-        } else {
-            glColor3f(colors[DARK_BROWN].r, colors[DARK_BROWN].g, colors[DARK_BROWN].b);
-        }
+        glColor3f(current_fill.r, current_fill.g, current_fill.b);
         glBegin(GL_QUADS);
         glVertex2i(x1, y1);
         glVertex2i(x2, y1);

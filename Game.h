@@ -21,13 +21,27 @@ private:
     vector<vector<unique_ptr<Tile>>> user_interface_board; // user sees this, starts empty
     int num_rows, num_cols;
     int bomb_count;
+    bool won, game_over;
 
 public:
     Game(int num_rows, int num_cols, int bomb_count) {
         this->num_rows = num_rows;
         this->num_cols = num_cols;
         this->bomb_count = bomb_count;
+        won = false;
+        game_over = false;
+
+        completed_board = create_board(false);
+        user_interface_board = create_board(true);
     }
+
+    bool is_won() const {
+        return won;
+    }
+
+    bool is_over() const {
+        return game_over;
+    };
 
     void set_num_rows(int num_rows) {
         this->num_rows = num_rows;
@@ -49,42 +63,38 @@ public:
         return num_cols;
     }
 
+
     vector<vector<unique_ptr<Tile>>> get_board() const {
         return user_interface_board;
-    }
-
-    void initialize() {
-        completed_board = create_board(false);
-        user_interface_board = create_board(true);
     }
 
     void play() {
         int row = 0, col = 0;
         string input = "w";
 
-        print(user_interface_board, row, col);
+        //print(user_interface_board, row, col);
         input = get_position(user_interface_board, row, col, input);
         add_bombs(row, col);
 
         while (input != "e" and input != "b") {
             input = update_board(user_interface_board, row, col, input);
             if (input != "b") {
-                print(user_interface_board, row, col);
+                //print(user_interface_board, row, col);
                 input = get_position(user_interface_board, row, col, input);
             }
         }
 
-        print(user_interface_board, row, col);
+        //print(user_interface_board, row, col);
     }
 
     static string get_position(vector<vector<unique_ptr<Tile>>> &current_board, int &row, int &col, string input) {
-        cout << "Input move:";
+        //cout << "Input move:";
         cin >> input;
 
         while (input != "c" and input !=  "f" and input != "e") {
             move_cursor(row, col, input);
-            print(current_board, row, col);
-            cout << "Input move:";
+            //print(current_board, row, col);
+            //cout << "Input move:";
             cin >> input;
         }
         return input;
@@ -114,7 +124,7 @@ public:
     string click_user_board(int row, int col, string input) {
         if (completed_board[row][col]->get_adj_bombs() == -1) {
             user_interface_board[row][col] = move(completed_board[row][col]);
-           input = "b";
+            input = "b";
         } else {
             vector<vector<int>> coords;
             zero_search(row, col, coords);
@@ -254,20 +264,20 @@ public:
         completed_board[x][y]->set_adj_bombs(adjacent_bombs);
     }
 
-    static void print(vector<vector<unique_ptr<Tile>>> &board, int row, int col) {
+/*    static void print(vector<vector<unique_ptr<Tile>>> &board, int row, int col) {
         for (int i = 0; i < board.size(); ++i) {
             for (int j = 0; j < board[i].size(); ++j) {
                 if (i == row && j == col) {
-                    cout << " |*" ;
+                    //cout << " |*" ;
                 } else {
-                    cout << " | ";
+                    //cout << " | ";
                 }
-                cout << board[i][j]->tile_display();
+                //cout << board[i][j]->tile_display();
             }
-            cout << " |" << endl;
+            //cout << " |" << endl;
         }
-        cout << endl;
-    }
+        //cout << endl;
+    }*/
 
 };
 

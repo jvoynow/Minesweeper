@@ -16,6 +16,7 @@ void init() {
     width = 1240;
     height = 640;
     padding = 300;
+    game.add_bombs(2,2);
 }
 
 /* Initialize OpenGL Graphics */
@@ -48,8 +49,7 @@ void display() {
         create_difficulty_buttons();
     } else {
         create_main_menu_button();
-        game.initialize();
-        game.play();
+        // TODO: Fix play
 
         double x = padding, y = 0;
         double h = (height) / num_rows;
@@ -181,13 +181,6 @@ void kbd(unsigned char key, int x, int y)
 }
 
 void cursor(int x, int y) {
-    // if ( x, y inside of game board)
-        // if (x, y is open)
-            // make background lighter brown
-        // else
-            // make background lighter green
-    // else if (x, y over main menu button)
-        // change background color
     if (easy.is_overlapping(x,y)) {
         easy.hover();
     } else {
@@ -207,6 +200,16 @@ void cursor(int x, int y) {
         main_menu.hover();
     } else {
         main_menu.stop_hover();
+    }
+
+    for (vector<unique_ptr<Tile>> &row_tiles : game.get_board()) {
+        for (unique_ptr<Tile> &tile : row_tiles) {
+            if(tile->is_overlapping(x,y)) {
+                tile->hover();
+            } else {
+                tile->stop_hover();
+            }
+        }
     }
 
     glutPostRedisplay();
@@ -245,14 +248,27 @@ void mouse(int button, int state, int x, int y) {
             game.set_num_rows(0);
             game.set_num_cols(0);
             game.set_bomb_count(0);
+        } else if (!game.is_won() && !game.is_over()) {
+            for (vector<unique_ptr<Tile>> &row_tiles : game.get_board()) {
+                for (unique_ptr<Tile> &tile : row_tiles) {
+                    if(tile->is_overlapping(x,y)) {
+                        game.click_user_board(tile->get_row(), tile->get_column(), "");
+                    }
+                }
+            }
         }
+
         // else if (game is not over && game has not been won)
             // openCell(x,y)
 
-    } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) {
-        // if (game is not over || game has not been won)
-            // toggle_flag(x,y)
-
+    } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game.is_over() && !game.is_won()) {
+        for (vector<unique_ptr<Tile>> &row_tiles : game.get_board()) {
+            for (unique_ptr<Tile> &tile : row_tiles) {
+                if(tile->is_overlapping(x,y)) {
+                    game.flag_user_board(tile->get_row(), tile->get_column());
+                }
+            }
+        }
     }
     
     glutPostRedisplay();

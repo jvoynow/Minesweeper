@@ -9,24 +9,40 @@ public:
     Unselected_tile(){
         row = 0;
         column = 0;
+        int temp = column;
+        if (row % 2 == 0) {
+            ++temp;
+        }
+        if (temp % 2 == 1) {
+            original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+            current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+
+        } else {
+            original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+            current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+        }
     }
 
     Unselected_tile(int row, int column) {
         this->row = row;
         this->column = column;
+        int temp = column;
+        if (row % 2 == 0) {
+            ++temp;
+        }
+        if (temp % 2 == 1) {
+            original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+            current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+
+        } else {
+            original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+            current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+        }
     }
 
 
 void draw() const override {
-    int temp = column;
-    if (row % 2 == 0) {
-        ++temp;
-    }
-    if (temp % 2 == 1) {
-        glColor3f(colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b);
-    } else {
-        glColor3f(colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b);
-    }
+    glColor3f(current_fill.r, current_fill.g, current_fill.b);
     glBegin(GL_QUADS);
     glVertex2i(x1, y1);
     glVertex2i(x2, y1);
