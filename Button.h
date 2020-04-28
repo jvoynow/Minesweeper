@@ -2,10 +2,7 @@
 #define PS_JV_GRAPHICS_FINAL_BUTTON_H
 
 #include <string>
-
-struct color {
-    double r, g, b;
-};
+#include "Graphics.h"
 
 class Button {
 private:

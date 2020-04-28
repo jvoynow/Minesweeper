@@ -1,11 +1,11 @@
 #ifndef PS_JV_GRAPHICS_FINAL_GAME_H
 #define PS_JV_GRAPHICS_FINAL_GAME_H
 
-#include "Unselected_flag.h"
-#include "Selected_safe.h"
-#include "Selected_bomb.h"
+#include "Bomb.h"
+#include "Flag.h"
+#include "Safe_Space.h"
 #include "Tile.h"
-#include "Unselected_tile.h"
+#include "Unselected_tile_no_graphics.h"
 
 
 #include <iostream>
@@ -15,7 +15,7 @@
 
 using namespace std;
 
-class Game {
+class Game_no_graphics {
 private:
     vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
     vector<vector<unique_ptr<Tile>>> user_interface_board; // user sees this, starts empty
@@ -24,7 +24,7 @@ private:
     bool won, game_over;
 
 public:
-    Game(int num_rows, int num_cols, int bomb_count) {
+    Game_no_graphics(int num_rows, int num_cols, int bomb_count) {
         this->num_rows = num_rows;
         this->num_cols = num_cols;
         this->bomb_count = bomb_count;

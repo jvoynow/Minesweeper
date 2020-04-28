@@ -4,10 +4,14 @@
 
 #include <iostream>
 #include <string>
-#include "graphics_test.h"
+#include "Graphics.h"
 
 
 using namespace std;
+
+struct color {
+    double r, g, b;
+};
 
 class Tile {
 protected:
@@ -103,7 +107,6 @@ public:
     void add_adj_bomb() {
         set_adj_bombs(get_adj_bombs() + 1);
     }
-
 
     bool is_overlapping(int x, int y) const {
         return x >= x1 && y >= y1 && x <= x2 && y <= y2;

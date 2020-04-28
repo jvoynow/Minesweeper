@@ -1,6 +1,5 @@
 #include "Button.h"
 
-#include "graphics_test.h"
 using namespace std;
 
 Button::Button() {

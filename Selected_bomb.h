@@ -2,27 +2,17 @@
 #define PS_JV_GRAPHICS_FINAL_SELECTED_BOMB_H
 
 #include "Tile.h"
+#include "Graphics.h"
 
-class Bomb : public Tile {
+class Selected_bomb : public Tile {
 public:
-    Bomb() {
+    Selected_bomb() {
         adj_bombs = -1;
-        int temp = column;
-        if (row % 2 == 0) {
-            ++temp;
-        }
-        if (temp % 2 == 1) {
-            original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-            current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-
-        } else {
-            original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-            current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-        }
     }
 
     void draw() const override {
-        glColor3f(current_fill.r, current_fill.g, current_fill.b);
+        // TODO: Change this
+        glColor3f(0,0,1);
         glBegin(GL_QUADS);
         glVertex2i(x1, y1);
         glVertex2i(x2, y1);
@@ -31,14 +21,14 @@ public:
         glEnd();
 
 
-        // TODO: Draw Bomb here
+ /*       // TODO: Draw Bomb here
         unsigned char filler[] = "10";
         int num = 10;
-        glColor3f(colors[SEVEN].r, colors[SEVEN].g, colors[SEVEN].b);
+        glColor3f(0,0,0);
         glRasterPos2i(x1 + (0.5 * (x2 - x1)) - (0.5 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, filler)),
                       y1 + (0.5 * (y2 - y1)) + (0.75 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, filler)));
         glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, reinterpret_cast<int>('0' + num));
-        glEnd();
+        glEnd();*/
     }
 };
 
