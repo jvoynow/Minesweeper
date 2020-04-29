@@ -241,7 +241,7 @@ void mouse(int button, int state, int x, int y) {
             game.update_game_members(16, 16, 40);
             game_bool = true;
         } else if (expert.is_overlapping(x, y) && !game_bool) {
-            game.update_game_members(16, 30, 99);
+            game.update_game_members(30, 16, 99);
             game_bool = true;
         } else if (main_menu.is_overlapping(x, y) && game_bool) {
             game_bool = false;

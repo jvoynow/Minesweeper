@@ -10,8 +10,7 @@ public:
 
     void draw() const override {
         // TODO: Change this
-        //glColor3f(current_fill.r,current_fill.g,current_fill.b);
-        glColor3f(1,0,0);
+        glColor3f(current_fill.r,current_fill.g,current_fill.b);
         glBegin(GL_QUADS);
         glVertex2i(x1, y1);
         glVertex2i(x2, y1);
@@ -21,13 +20,13 @@ public:
 
 
 
-//        //flag
-//        glColor3f(1,0,0);
-//        glBegin(GL_TRIANGLES);
-//        glVertex2i(x2 + 40, y1 + 20);
-//        glVertex2i(x2 + 40, y1 + 60);
-//        glVertex2i(x2 + 10, y1 + 40);
-//        glEnd();
+        //flag
+        glColor3f(1,0,0);
+        glBegin(GL_TRIANGLES);
+        glVertex2i(x1 + 5, y2 - 5);
+        glVertex2i(x1 + 5, y1 + 5);
+        glVertex2i(x2 - 5, y1 + ((y2 - y1) / 2));
+        glEnd();
     }
 };
 
