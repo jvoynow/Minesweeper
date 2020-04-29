@@ -314,10 +314,10 @@ public:
                     hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
                 }
 
-                bomb.set_x1(padding + ((row - 1)* ((width - padding)/ num_cols)));
-                bomb.set_x2(padding + (row * ((width - padding)/ num_cols)));
-                bomb.set_y1((col - 1) * (height)/ num_rows);
-                bomb.set_y2(col * (height)/ num_rows);
+                bomb.set_x1(padding + (col * ((width - padding)/ num_cols)));
+                bomb.set_x2(padding + ((col + 1 )* ((width - padding)/ num_cols)));
+                bomb.set_y1(row * (height)/ num_rows);
+                bomb.set_y2((row + 1) * (height)/ num_rows);
 
                 bomb.set_current_fill(current_fill);
                 bomb.set_original_fill(original_fill);
