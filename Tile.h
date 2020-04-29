@@ -21,7 +21,7 @@ protected:
     int adj_bombs;
     int row, column;
     color current_fill, original_fill, hover_fill;
-    double x1, x2, y1, y2;
+    double c1, c2, r1, r2;
 public:
     Tile() {
         display = false;
@@ -80,20 +80,20 @@ public:
         this->column = column;
     }
 
-    void set_x1(double x1) {
-        this->x1 = x1;
+    void set_c1(double c1) {
+        this->c1 = c1;
     }
 
-    void set_x2(double x2) {
-        this->x2 = x2;
+    void set_c2(double c2) {
+        this->c2 = c2;
     }
 
-    void set_y1(double y1) {
-        this->y1 = y1;
+    void set_r1(double r1) {
+        this->r1 = r1;
     }
 
-    void set_y2(double y2) {
-        this->y2 = y2;
+    void set_r2(double r2) {
+        this->r2 = r2;
     }
 
     void hover() {
@@ -109,7 +109,7 @@ public:
     }
 
     bool is_overlapping(int x, int y) const {
-        return x >= x1 && y >= y1 && x <= x2 && y <= y2;
+        return x >= c1 && y >= r1 && x <= c2 && y <= r2;
     }
 
     virtual void draw() const = 0;

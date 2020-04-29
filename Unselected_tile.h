@@ -21,10 +21,10 @@ public:
         // TODO: Change this
         glColor3f(current_fill.r,current_fill.g,current_fill.b);
         glBegin(GL_QUADS);
-        glVertex2i(x1, y1);
-        glVertex2i(x2, y1);
-        glVertex2i(x2, y2);
-        glVertex2i(x1, y2);
+        glVertex2i(c1, r1);
+        glVertex2i(c2, r1);
+        glVertex2i(c2, r2);
+        glVertex2i(c1, r2);
         glEnd();
     }
 };

@@ -12,10 +12,10 @@ public:
         // TODO: Change this
         glColor3f(current_fill.r,current_fill.g,current_fill.b);
         glBegin(GL_QUADS);
-        glVertex2i(x1, y1);
-        glVertex2i(x2, y1);
-        glVertex2i(x2, y2);
-        glVertex2i(x1, y2);
+        glVertex2i(c1, r1);
+        glVertex2i(c2, r1);
+        glVertex2i(c2, r2);
+        glVertex2i(c1, r2);
         glEnd();
 
 
@@ -23,9 +23,9 @@ public:
         //flag
         glColor3f(1,0,0);
         glBegin(GL_TRIANGLES);
-        glVertex2i(x1 + 5, y2 - 5);
-        glVertex2i(x1 + 5, y1 + 5);
-        glVertex2i(x2 - 5, y1 + ((y2 - y1) / 2));
+        glVertex2i(c1 + 5, r2 - 5);
+        glVertex2i(c1 + 5, r1 + 5);
+        glVertex2i(c2 - 5, r1 + ((r2 - r1) / 2));
         glEnd();
     }
 };

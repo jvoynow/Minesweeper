@@ -121,10 +121,10 @@ public:
         }
 
 
-        flag.set_x1(padding + (col * ((width - padding)/ num_cols)));
-        flag.set_x2(padding + ((col + 1) * ((width - padding)/ num_cols)));
-        flag.set_y1((row) * (height)/ num_rows);
-        flag.set_y2((row + 1) * (height)/ num_rows);
+        flag.set_c1(padding + (col * ((width - padding)/ num_cols)));
+        flag.set_c2(padding + ((col + 1) * ((width - padding)/ num_cols)));
+        flag.set_r1((row) * (height)/ num_rows);
+        flag.set_r2((row + 1) * (height)/ num_rows);
 
 
         flag.set_current_fill(current_fill);
@@ -222,10 +222,10 @@ public:
                     unselected.set_original_fill(original_fill);
                     unselected.set_hover_fill(hover_fill);
 
-                    unselected.set_x1(padding + (col * ((width - padding)/ num_cols)));
-                    unselected.set_x2(padding + ((col + 1) * ((width - padding)/ num_cols)));
-                    unselected.set_y1(row * (height)/ num_rows);
-                    unselected.set_y2((row + 1) * (height)/ num_rows);
+                    unselected.set_c1(padding + (col * ((width - padding)/ num_cols)));
+                    unselected.set_c2(padding + ((col + 1) * ((width - padding)/ num_cols)));
+                    unselected.set_r1(row * (height)/ num_rows);
+                    unselected.set_r2((row + 1) * (height)/ num_rows);
 
                     unselected.set_row(row);
                     unselected.set_column(col);
@@ -250,10 +250,10 @@ public:
                         hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
                     }
 
-                    space.set_x1(padding + (col * ((width - padding)/ num_cols)));
-                    space.set_x2(padding + ((col + 1) * ((width - padding)/ num_cols)));
-                    space.set_y1(row * (height)/ num_rows);
-                    space.set_y2((row + 1) * (height)/ num_rows);
+                    space.set_c1(padding + (col * ((width - padding)/ num_cols)));
+                    space.set_c2(padding + ((col + 1) * ((width - padding)/ num_cols)));
+                    space.set_r1(row * (height)/ num_rows);
+                    space.set_r2((row + 1) * (height)/ num_rows);
 
                     space.set_current_fill(current_fill);
                     space.set_original_fill(original_fill);
@@ -315,10 +315,10 @@ public:
                     hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
                 }
 
-                bomb.set_x1(padding + (y * ((width - padding)/ num_cols)));
-                bomb.set_x2(padding + ((y + 1 )* ((width - padding)/ num_cols)));
-                bomb.set_y1(x * (height)/ num_rows);
-                bomb.set_y2((x + 1) * (height)/ num_rows);
+                bomb.set_c1(padding + (y * ((width - padding)/ num_cols)));
+                bomb.set_c2(padding + ((y + 1 )* ((width - padding)/ num_cols)));
+                bomb.set_r1(x * (height)/ num_rows);
+                bomb.set_r2((x + 1) * (height)/ num_rows);
 
                 bomb.set_current_fill(current_fill);
                 bomb.set_original_fill(original_fill);
