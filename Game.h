@@ -28,14 +28,17 @@ public:
 //    Game() {
 //
 //    }
-    Game(int num_rows, int num_cols, int bomb_count) {
+    Game() {
+        win = false;
+        game_over = false;
+        moves = 0;
+    }
+
+    void update_game_members(int num_rows, int num_cols, int bomb_count) {
         this->num_rows = num_rows;
         this->num_cols = num_cols;
         this->bomb_count = bomb_count;
-        win = false;
-        game_over = false;
-        steps_until_win = num_cols * num_rows - bomb_count;
-        moves = 0;
+        steps_until_win = num_rows * num_cols - bomb_count;
     }
 
     void set_num_rows(int num_rows) {

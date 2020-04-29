@@ -10,8 +10,8 @@ GLdouble width, height, padding;
 Button easy, intermediate, expert, main_menu;
 
 int wd;
-int num_columns = 8, num_rows = 8, bomb_count = 10;
-Game game(8,8,10);
+Game game;
+bool game_bool = false;
 
 void init() {
     width = 1240;
@@ -47,10 +47,9 @@ void display() {
 
 
 
-    if (num_rows == 0 && num_columns == 0) {
+    if (!game_bool) {
         create_difficulty_buttons();
-    } //else if (game.is_over()) {
-    //}
+    }
     else {
         if (game.get_game_over()) {
             display_loss();
@@ -234,34 +233,23 @@ void cursor(int x, int y) {
 // button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
-//        if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-//            if (easy.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
-//                num_rows = 8;
-//                num_columns = 8;
-//                bomb_count = 10;
-//                Game game(num_rows, num_columns, bomb_count);
-//            } else if (intermediate.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
-//                num_rows = 16;
-//                num_columns = 16;
-//                bomb_count = 40;
-//                Game game(num_rows, num_columns, bomb_count);
-//            } else if (expert.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
-//                num_rows = 16;
-//                num_columns = 30;
-//                bomb_count = 99;
-//                Game game(num_rows, num_columns, bomb_count);
-//            }
-//            if (main_menu.is_overlapping(x, y) && num_rows != 0 && num_columns != 0) {
-//                num_columns = 0;
-//                num_rows = 0;
-//                bomb_count = 0;
-//            }
-//        }
-
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        game.left_click(x, y, padding, width, height);
+        if (easy.is_overlapping(x, y) && !game_bool) {
+            game.update_game_members(8, 8, 10);
+            game_bool = true;
+        } else if (intermediate.is_overlapping(x, y) && !game_bool) {
+            game.update_game_members(16, 16, 40);
+            game_bool = true;
+        } else if (expert.is_overlapping(x, y) && !game_bool) {
+            game.update_game_members(16, 30, 99);
+            game_bool = true;
+        } else if (main_menu.is_overlapping(x, y) && game_bool) {
+            game_bool = false;
+        } else if (game_bool) {
+            game.left_click(x, y, padding, width, height);
+        }
     }
-    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game.get_game_over() && !game.get_win()) {
+    else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game.get_game_over() && !game.get_win()) {
         game.flag(x, y, padding, width, height);
     }
     glutPostRedisplay();
