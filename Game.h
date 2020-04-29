@@ -121,10 +121,13 @@ public:
         }
 
 
-        flag.set_x1(padding + (col * ((width - padding)/ num_cols)));
-        flag.set_x2(padding + ((col + 1) * ((width - padding)/ num_cols)));
-        flag.set_y1((row) * (height)/ num_rows);
-        flag.set_y2((row + 1) * (height)/ num_rows);
+        flag.set_x1(padding + (row * ((width - padding)/ num_cols)));
+        flag.set_x2(padding + ((row + 1) * ((width - padding)/ num_cols)));
+        flag.set_y1((col) * (height)/ num_rows);
+        flag.set_y2((col + 1) * (height)/ num_rows);
+
+
+        cout << row << " " << col << endl;
 
         flag.set_current_fill(current_fill);
         flag.set_original_fill(original_fill);
@@ -196,13 +199,13 @@ public:
     vector<vector<unique_ptr<Tile>>> create_board(bool blank, int padding, int width, int height) {
         vector<vector<unique_ptr<Tile>>> new_board;
         color current_fill, original_fill, hover_fill;
-        for (int y = 0; y < num_rows; ++y) {
-            vector<unique_ptr<Tile>> row;
-            for (int x = 0; x < num_cols; ++x) {
+        for (int row = 0; row < num_rows; ++row) {
+            vector<unique_ptr<Tile>> row_vec;
+            for (int col = 0; col < num_cols; ++col) {
                 if (blank) {
                     Unselected_tile unselected;
-                    int temp = x;
-                    if (y % 2 == 0) {
+                    int temp = col;
+                    if (row % 2 == 0) {
                         ++temp;
                     }
                     if (temp % 2 == 1) {
@@ -221,20 +224,20 @@ public:
                     unselected.set_original_fill(original_fill);
                     unselected.set_hover_fill(hover_fill);
 
-                    unselected.set_x1(padding + (x * ((width - padding)/ num_cols)));
-                    unselected.set_x2(padding + ((x + 1) * ((width - padding)/ num_cols)));
-                    unselected.set_y1(y * (height)/ num_rows);
-                    unselected.set_y2((y + 1) * (height)/ num_rows);
+                    unselected.set_x1(padding + (row * ((width - padding)/ num_cols)));
+                    unselected.set_x2(padding + ((row + 1) * ((width - padding)/ num_cols)));
+                    unselected.set_y1(col * (height)/ num_rows);
+                    unselected.set_y2((col + 1) * (height)/ num_rows);
 
-                    unselected.set_row(x);
-                    unselected.set_column(y);
+                    unselected.set_row(row);
+                    unselected.set_column(col);
 
-                    row.push_back(move(make_unique<Unselected_tile>(unselected)));
+                    row_vec.push_back(move(make_unique<Unselected_tile>(unselected)));
                 } else {
                     Selected_safe space;
 
-                    int temp = x;
-                    if (y % 2 == 0) {
+                    int temp = col;
+                    if (row % 2 == 0) {
                         ++temp;
                     }
                     if (temp % 2 == 1) {
@@ -249,22 +252,22 @@ public:
                         hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
                     }
 
-                    space.set_x1(padding + (x * ((width - padding)/ num_cols)));
-                    space.set_x2(padding + ((x + 1) * ((width - padding)/ num_cols)));
-                    space.set_y1(y * (height)/ num_rows);
-                    space.set_y2((y + 1) * (height)/ num_rows);
+                    space.set_x1(padding + (row * ((width - padding)/ num_cols)));
+                    space.set_x2(padding + ((row + 1) * ((width - padding)/ num_cols)));
+                    space.set_y1(col * (height)/ num_rows);
+                    space.set_y2((col + 1) * (height)/ num_rows);
 
                     space.set_current_fill(current_fill);
                     space.set_original_fill(original_fill);
                     space.set_hover_fill(hover_fill);
 
-                    space.set_row(x);
-                    space.set_column(y);
+                    space.set_row(row);
+                    space.set_column(col);
 
-                    row.push_back(move(make_unique<Selected_safe>(space)));
+                    row_vec.push_back(move(make_unique<Selected_safe>(space)));
                 }
             }
-            new_board.push_back(move(row));
+            new_board.push_back(move(row_vec));
         }
         return new_board;
     }
