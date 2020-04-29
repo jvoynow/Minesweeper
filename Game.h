@@ -100,7 +100,7 @@ public:
     }
 
     // Todo this is the logic for flagging
-    void flag_user_board(int col, int row, int padding, int width, int height) {
+    void flag_user_board(int row, int col, int padding, int width, int height) {
         Unselected_flag flag;
         int temp = col;
         color current_fill, original_fill, hover_fill;
