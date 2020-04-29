@@ -8,8 +8,8 @@ GLdouble width, height, padding;
 int num_columns = 0, num_rows = 0, moves = 0;
 int wd;
 Button easy, intermediate, expert, main_menu;
-vector<vector<unique_ptr<Tile>>> completed_board = create_board(false); // master board data/info
-vector<vector<unique_ptr<Tile>>> user_interface_board = create_board (true);// user sees this, starts empty
+vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
+vector<vector<unique_ptr<Tile>>> user_interface_board;// user sees this, starts empty
 int bomb_count;
 bool won, game_over;
 
@@ -47,84 +47,22 @@ void display() {
     title();
 
 
-/*    vector<unique_ptr<Tile>> tiles;
-
-
-    Unselected_tile tile;
-    tile.set_x1(400);
-    tile.set_x2(600);
-    tile.set_y1(100);
-    tile.set_y2(300);
-    tiles.push_back(make_unique<Unselected_tile>(tile));
-
-    Unselected_flag flag;
-    flag.set_x1(600);
-    flag.set_x2(800);
-    flag.set_y1(100);
-    flag.set_y2(300);
-    tiles.push_back(make_unique<Unselected_flag>(flag));
-
-
-
-// TODO: SET coords before push_back
-
-    Selected_bomb bomb;
-    tiles.push_back(make_unique<Selected_bomb>(bomb));
-    bomb.set_x1(400);
-    bomb.set_x2(600);
-    bomb.set_y1(300);
-    bomb.set_y2(500);
-
-    Selected_safe safe;
-    tiles.push_back(make_unique<Selected_safe>(safe));
-    safe.set_x1(600);
-    safe.set_x2(800);
-    safe.set_y1(300);
-    safe.set_y2(500);
-
-    for (unique_ptr<Tile> &tile : tiles) {
-        tile->draw();
-    }*/
-
 
     if (num_rows == 0 && num_columns == 0) {
         create_difficulty_buttons();
     } else {
+        completed_board = create_board(false);
+        user_interface_board = create_board (true);
         create_main_menu_button();
-        // TODO: Fix play
 
         double x = padding, y = 0;
         double h = (height) / num_rows;
         double w = (width - padding) / num_columns;
 
-        if (moves == 0) {
-            for (int row = 0; row < num_rows; row++) {
-                for (int col = 0; col < num_columns; col++) {
-                    int temp = col;
-                    if (row % 2 == 0) {
-                        ++temp;
-                    }
-                    if (temp % 2 == 1) {
-                        glColor3f(colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b);
-                    } else {
-                        glColor3f(colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b);
-                    }
-                    glBegin(GL_QUADS);
-                    glVertex2i(x, y);
-                    glVertex2i(x + w, y);
-                    glVertex2i(x + w, y + h);
-                    glVertex2i(x, y + h);
-                    glEnd();
-                    x += w;
-                }
-                x = padding;
-                y += h;
-            }
-        } else {
-            for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
-                for (unique_ptr<Tile> &tile : row_tiles) {
-                    tile->draw();
-                }
+
+        for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
+            for (unique_ptr<Tile> &tile : row_tiles) {
+                tile->draw();
             }
         }
     }
@@ -266,7 +204,7 @@ void cursor(int x, int y) {
         main_menu.stop_hover();
     }
 
-    for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
+    /*for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
         for (unique_ptr<Tile> &tile : row_tiles) {
             if (tile->is_overlapping(x, y)) {
                 tile->hover();
@@ -274,7 +212,7 @@ void cursor(int x, int y) {
                 tile->stop_hover();
             }
         }
-    }
+    }*/
 
     glutPostRedisplay();
 }
@@ -304,7 +242,7 @@ void mouse(int button, int state, int x, int y) {
             num_rows = 0;
             bomb_count = 0;
             moves = 0;
-        } else { // TODO: If not won or game over
+        } else if (num_rows != 0 && num_columns != 0){ // TODO: If not won or game over
             for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
                 for (unique_ptr<Tile> &tile : row_tiles) {
                     if (tile->is_overlapping(x, y)) {
@@ -312,10 +250,13 @@ void mouse(int button, int state, int x, int y) {
                             add_bombs(tile->get_row(), tile->get_column());
                             click_user_board(tile->get_row(), tile->get_column());
 
-                            moves++;
+                            cout << tile->get_row() << ", " << tile->get_column() << endl;
                         } else {
                             click_user_board(tile->get_row(), tile->get_column());
+                            cout << tile->get_row() << ", " << tile->get_column() << endl;
+
                         }
+                        moves++;
                     }
                 }
             }
@@ -440,6 +381,8 @@ void add_bombs(int row, int col) {
             bomb.set_original_fill(original_fill);
             bomb.set_hover_fill(hover_fill);
 
+            bomb.set_row(row);
+            bomb.set_column(col);
             unique_ptr<Selected_bomb> unique_bomb_ptr = make_unique<Selected_bomb>(bomb);
             completed_board[x][y] = move(unique_bomb_ptr);
             update_safe_spaces_helper(x, y);
@@ -480,6 +423,9 @@ vector<vector<unique_ptr<Tile>>> create_board(bool blank) {
                 unselected.set_y1(y * (height)/ num_rows);
                 unselected.set_y2((y + 1) * (height)/ num_rows);
 
+                unselected.set_row(x);
+                unselected.set_column(y);
+
                 row.push_back(move(make_unique<Unselected_tile>(unselected)));
             } else {
                 Selected_safe space;
@@ -508,6 +454,9 @@ vector<vector<unique_ptr<Tile>>> create_board(bool blank) {
                 space.set_current_fill(current_fill);
                 space.set_original_fill(original_fill);
                 space.set_hover_fill(hover_fill);
+
+                space.set_row(x);
+                space.set_column(y);
 
                 row.push_back(move(make_unique<Selected_safe>(space)));
             }
@@ -547,15 +496,18 @@ void zero_search(int row, int col, vector<vector<int>> &coords) {
         zero_search(row - 1, col - 1, coords);
     }
     user_interface_board[row][col] = move(completed_board[row][col]);
+    cout << "Worked" << endl;
 }
 
 void click_user_board(int row, int col) {
     if (completed_board[row][col]->get_adj_bombs() == -1) {
         user_interface_board[row][col] = move(completed_board[row][col]);
+        cout << "Bomb" << endl;
         game_over = true;
     } else {
         vector<vector<int>> coords;
         zero_search(row, col, coords);
+        cout << "valid move" << endl;
     }
 }
 
@@ -588,6 +540,9 @@ void flag_user_board(int row, int col) {
     flag.set_current_fill(current_fill);
     flag.set_original_fill(original_fill);
     flag.set_hover_fill(hover_fill);
+
+    flag.set_row(row);
+    flag.set_column(col);
     user_interface_board[row][col] = move(make_unique<Unselected_flag>(flag));
 }
 
