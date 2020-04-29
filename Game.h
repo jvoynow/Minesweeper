@@ -139,7 +139,7 @@ public:
     }
 
     // Todo this is the logic for clicking on the board
-    void click_user_board(int col, int row) {
+    void click_user_board(int row, int col) {
         if (completed_board[row][col]->get_adj_bombs() == -1) {
             user_interface_board[row][col] = move(completed_board[row][col]);
             game_over = true;
