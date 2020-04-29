@@ -61,6 +61,8 @@
 
     void display_creators();
 
+    void display_loss();
+
     void flag_user_board(int row, int col);
 
     void click_user_board(int row, int col);

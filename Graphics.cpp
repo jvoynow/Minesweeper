@@ -50,15 +50,16 @@ void display() {
 
     if (num_rows == 0 && num_columns == 0) {
         create_difficulty_buttons();
-    } else {
-        completed_board = create_board(false);
-        user_interface_board = create_board (true);
+    } //else if (game.is_over()) {
+    //}
+    else {
+        if (game.is_over()) {
+            display_loss();
+        } else if (moves == 0) {
+            completed_board = create_board(false);
+            user_interface_board = create_board (true);
+        }
         create_main_menu_button();
-
-        double x = padding, y = 0;
-        double h = (height) / num_rows;
-        double w = (width - padding) / num_columns;
-
 
         for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
             for (unique_ptr<Tile> &tile : row_tiles) {
@@ -134,6 +135,23 @@ void create_difficulty_buttons() {
     easy.draw(padding, glutBitmapLength(GLUT_BITMAP_HELVETICA_18, easy_chars));
     intermediate.draw(padding, glutBitmapLength(GLUT_BITMAP_HELVETICA_18, intermediate_chars));
     expert.draw(padding, glutBitmapLength(GLUT_BITMAP_HELVETICA_18, expert_chars));
+}
+
+void display_loss() {
+    unsigned char loss[] = "Game Over";
+    int w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, loss);
+    glRasterPos2i((double) padding / 2 - (double) w / 2, 300);
+    glColor3f(colors[BLACK].r, colors[BLACK].g, colors[BLACK].b);
+    for (char c : loss) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+    unsigned char again[] = "Try Again";
+    int w_again = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, again);
+    glRasterPos2i((double) padding / 2 - (double) w_again / 2, 340);
+    glColor3f(colors[BLACK].r, colors[BLACK].g, colors[BLACK].b);
+    for (char c : again) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
 }
 
 
@@ -227,34 +245,34 @@ void mouse(int button, int state, int x, int y) {
             num_columns = 8;
             bomb_count = 10;
             moves = 0;
+            game.set_is_over(false);
         } else if (intermediate.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
             num_rows= 16;
             num_columns = 16;
             bomb_count = 40;
             moves = 0;
+            game.set_is_over(false);
         } else if (expert.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
             num_rows= 16;
             num_columns = 30;
             bomb_count = 99;
             moves = 0;
+            game.set_is_over(false);
         } else if (main_menu.is_overlapping(x, y) && num_rows != 0 && num_columns != 0) {
             num_columns = 0;
             num_rows = 0;
             bomb_count = 0;
             moves = 0;
-        } else if (num_rows != 0 && num_columns != 0){ // TODO: If not won or game over
+            game.set_is_over(false);
+        } else if (num_rows != 0 && num_columns != 0) { // TODO: If not won or game over
             for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
                 for (unique_ptr<Tile> &tile : row_tiles) {
                     if (tile->is_overlapping(x, y)) {
                         if (moves == 0) {
                             add_bombs(tile->get_row(), tile->get_column());
                             click_user_board(tile->get_row(), tile->get_column());
-
-                            cout << tile->get_row() << ", " << tile->get_column() << endl;
                         } else {
                             click_user_board(tile->get_row(), tile->get_column());
-                            cout << tile->get_row() << ", " << tile->get_column() << endl;
-
                         }
                         moves++;
                     }
@@ -496,18 +514,15 @@ void zero_search(int row, int col, vector<vector<int>> &coords) {
         zero_search(row - 1, col - 1, coords);
     }
     user_interface_board[row][col] = move(completed_board[row][col]);
-    cout << "Worked" << endl;
 }
 
 void click_user_board(int row, int col) {
     if (completed_board[row][col]->get_adj_bombs() == -1) {
         user_interface_board[row][col] = move(completed_board[row][col]);
-        cout << "Bomb" << endl;
         game_over = true;
     } else {
         vector<vector<int>> coords;
         zero_search(row, col, coords);
-        cout << "valid move" << endl;
     }
 }
 
