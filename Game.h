@@ -100,7 +100,7 @@ public:
     }
 
     // Todo this is the logic for flagging
-    void flag_user_board(int row, int col, int padding, int width, int height) {
+    void flag_user_board(int col, int row, int padding, int width, int height) {
         Unselected_flag flag;
         int temp = col;
         color current_fill, original_fill, hover_fill;
@@ -136,7 +136,7 @@ public:
     }
 
     // Todo this is the logic for clicking on the board
-    void click_user_board(int row, int col) {
+    void click_user_board(int col, int row) {
         if (completed_board[row][col]->get_adj_bombs() == -1) {
             user_interface_board[row][col] = move(completed_board[row][col]);
             game_over = true;
