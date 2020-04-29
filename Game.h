@@ -21,27 +21,22 @@ private:
     vector<vector<unique_ptr<Tile>>> user_interface_board; // user sees this, starts empty
     int num_rows, num_cols;
     int bomb_count;
-    bool won, game_over;
+    bool win, game_over;
+    int steps_until_win, moves;
 
 public:
+//    Game() {
+//
+//    }
     Game(int num_rows, int num_cols, int bomb_count) {
         this->num_rows = num_rows;
         this->num_cols = num_cols;
         this->bomb_count = bomb_count;
-        won = false;
+        win = false;
         game_over = false;
-
-        completed_board = create_board(false);
-        user_interface_board = create_board(true);
+        steps_until_win = num_cols * num_rows - bomb_count;
+        moves = 0;
     }
-
-    bool is_won() const {
-        return won;
-    }
-
-    bool is_over() const {
-        return game_over;
-    };
 
     void set_num_rows(int num_rows) {
         this->num_rows = num_rows;
@@ -63,54 +58,78 @@ public:
         return num_cols;
     }
 
-
-    vector<vector<unique_ptr<Tile>>> get_board() const {
-        return user_interface_board;
+    int get_moves() const {
+        return moves;
     }
 
-    void play() {
-        int row = 0, col = 0;
-        string input = "w";
+    bool get_game_over() {
+        return game_over;
+    }
 
-        //print(user_interface_board, row, col);
-        input = get_position(user_interface_board, row, col, input);
-        add_bombs(row, col);
+    bool get_win() {
+        return win;
+    }
 
-        while (input != "e" and input != "b") {
-            input = update_board(user_interface_board, row, col, input);
-            if (input != "b") {
-                //print(user_interface_board, row, col);
-                input = get_position(user_interface_board, row, col, input);
+    void left_click(int pixel_x, int pixel_y, int padding, int width, int height) {
+        for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
+            for (unique_ptr<Tile> &tile : row_tiles) {
+                if (tile->is_overlapping(pixel_x, pixel_y)) {
+                    if (moves == 0) {
+                        add_bombs(tile->get_row(), tile->get_column(), padding, width, height);
+                        click_user_board(tile->get_row(), tile->get_column());
+                    } else {
+                        click_user_board(tile->get_row(), tile->get_column());
+                    }
+                    moves++;
+                }
             }
         }
-
-        //print(user_interface_board, row, col);
     }
 
-    static string get_position(vector<vector<unique_ptr<Tile>>> &current_board, int &row, int &col, string input) {
-        //cout << "Input move:";
-        cin >> input;
-
-        while (input != "c" and input !=  "f" and input != "e") {
-            move_cursor(row, col, input);
-            //print(current_board, row, col);
-            //cout << "Input move:";
-            cin >> input;
+    void flag(int pixel_x, int pixel_y, int padding, int width, int height) {
+        for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
+            for (unique_ptr<Tile> &tile : row_tiles) {
+                if (tile->is_overlapping(pixel_x, pixel_y)) {
+                    flag_user_board(tile->get_row(), tile->get_column(), padding, width, height);
+                }
+            }
         }
-        return input;
-    }
-
-    static void move_cursor(int &row, int &col, string &input) {
-        if(input == "w") {row--;}
-        if(input == "a") {col--;}
-        if(input == "s") {row++;}
-        if(input == "d") {col++;}
     }
 
     // Todo this is the logic for flagging
-    void flag_user_board(int row, int col) {
-        Flag flag;
-        user_interface_board[row][col] = move(make_unique<Flag>(flag));
+    void flag_user_board(int row, int col, int padding, int width, int height) {
+        Unselected_flag flag;
+        int temp = col;
+        color current_fill, original_fill, hover_fill;
+        if (row % 2 == 0) {
+            ++temp;
+        }
+        if (temp % 2 == 1) {
+            original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+            current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+            // TODO Change this
+            hover_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+
+        } else {
+            original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+            current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+            // TODO Change this
+            hover_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+        }
+
+
+        flag.set_x1(padding + ((row - 1)* ((width - padding)/ num_cols)));
+        flag.set_x2(padding + (row * ((width - padding)/ num_cols)));
+        flag.set_y1((col - 1) * (height)/ num_rows);
+        flag.set_y2(col * (height)/ num_rows);
+
+        flag.set_current_fill(current_fill);
+        flag.set_original_fill(original_fill);
+        flag.set_hover_fill(hover_fill);
+
+        flag.set_row(row);
+        flag.set_column(col);
+        user_interface_board[row][col] = move(make_unique<Unselected_flag>(flag));
     }
 
     // Todo this is the logic for clicking on the board
@@ -121,6 +140,7 @@ public:
         } else {
             vector<vector<int>> coords;
             zero_search(row, col, coords);
+            --steps_until_win;
         }
     }
 
@@ -165,17 +185,80 @@ public:
         return exists;
     }
 
-    vector<vector<unique_ptr<Tile>>> create_board(bool blank) {
+    void create_board_helper(int padding, int width, int height) {
+        completed_board = create_board(false, padding, width, height);
+        user_interface_board = create_board (true, padding, width, height);
+    }
+
+    vector<vector<unique_ptr<Tile>>> create_board(bool blank, int padding, int width, int height) {
         vector<vector<unique_ptr<Tile>>> new_board;
+        color current_fill, original_fill, hover_fill;
         for (int y = 0; y < num_rows; ++y) {
             vector<unique_ptr<Tile>> row;
             for (int x = 0; x < num_cols; ++x) {
                 if (blank) {
                     Unselected_tile unselected;
+                    int temp = x;
+                    if (y % 2 == 0) {
+                        ++temp;
+                    }
+                    if (temp % 2 == 1) {
+                        original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+                        current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+                        // TODO Change this
+                        hover_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+
+                    } else {
+                        original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+                        current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+                        // TODO Change this
+                        hover_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
+                    }
+                    unselected.set_current_fill(current_fill);
+                    unselected.set_original_fill(original_fill);
+                    unselected.set_hover_fill(hover_fill);
+
+                    unselected.set_x1(padding + (x * ((width - padding)/ num_cols)));
+                    unselected.set_x2(padding + ((x + 1) * ((width - padding)/ num_cols)));
+                    unselected.set_y1(y * (height)/ num_rows);
+                    unselected.set_y2((y + 1) * (height)/ num_rows);
+
+                    unselected.set_row(x);
+                    unselected.set_column(y);
+
                     row.push_back(move(make_unique<Unselected_tile>(unselected)));
                 } else {
-                    Safe_Space space;
-                    row.push_back(move(make_unique<Safe_Space>(space)));
+                    Selected_safe space;
+
+                    int temp = x;
+                    if (y % 2 == 0) {
+                        ++temp;
+                    }
+                    if (temp % 2 == 1) {
+                        original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+                        current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+                        // TODO Change this
+                        hover_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+                    } else {
+                        original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+                        current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+                        // TODO Change this
+                        hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+                    }
+
+                    space.set_x1(padding + (x * ((width - padding)/ num_cols)));
+                    space.set_x2(padding + ((x + 1) * ((width - padding)/ num_cols)));
+                    space.set_y1(y * (height)/ num_rows);
+                    space.set_y2((y + 1) * (height)/ num_rows);
+
+                    space.set_current_fill(current_fill);
+                    space.set_original_fill(original_fill);
+                    space.set_hover_fill(hover_fill);
+
+                    space.set_row(x);
+                    space.set_column(y);
+
+                    row.push_back(move(make_unique<Selected_safe>(space)));
                 }
             }
             new_board.push_back(move(row));
@@ -183,7 +266,7 @@ public:
         return new_board;
     }
 
-    void add_bombs(int row, int col) {
+    void add_bombs(int row, int col, int padding, int width, int height) {
         vector<vector<int>> invalid_positions = get_invalid_positions(row, col);
 
         srand(time(nullptr));
@@ -209,8 +292,37 @@ public:
 
             // check if bomb exists in given position
             if (completed_board[x][y]->get_adj_bombs() != -1) {
-                Bomb bomb;
-                unique_ptr<Bomb> unique_bomb_ptr = make_unique<Bomb>(bomb);
+                Selected_bomb bomb;
+
+                color current_fill, original_fill, hover_fill;
+                int temp = x;
+                if (y % 2 == 0) {
+                    ++temp;
+                }
+                if (temp % 2 == 1) {
+                    original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+                    current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+                    // TODO Change this
+                    hover_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+                } else {
+                    original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+                    current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+                    // TODO Change this
+                    hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+                }
+
+                bomb.set_x1(padding + ((row - 1)* ((width - padding)/ num_cols)));
+                bomb.set_x2(padding + (row * ((width - padding)/ num_cols)));
+                bomb.set_y1((col - 1) * (height)/ num_rows);
+                bomb.set_y2(col * (height)/ num_rows);
+
+                bomb.set_current_fill(current_fill);
+                bomb.set_original_fill(original_fill);
+                bomb.set_hover_fill(hover_fill);
+
+                bomb.set_row(row);
+                bomb.set_column(col);
+                unique_ptr<Selected_bomb> unique_bomb_ptr = make_unique<Selected_bomb>(bomb);
                 completed_board[x][y] = move(unique_bomb_ptr);
                 update_safe_spaces_helper(x, y);
             }
@@ -263,21 +375,13 @@ public:
         completed_board[x][y]->set_adj_bombs(adjacent_bombs);
     }
 
-/*    static void print(vector<vector<unique_ptr<Tile>>> &board, int row, int col) {
-        for (int i = 0; i < board.size(); ++i) {
-            for (int j = 0; j < board[i].size(); ++j) {
-                if (i == row && j == col) {
-                    //cout << " |*" ;
-                } else {
-                    //cout << " | ";
-                }
-                //cout << board[i][j]->tile_display();
+    void draw() {
+        for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
+            for (unique_ptr<Tile> &tile : row_tiles) {
+                tile->draw();
             }
-            //cout << " |" << endl;
         }
-        //cout << endl;
-    }*/
-
+    }
 };
 
 #endif //PS_JV_GRAPHICS_FINAL_GAME_H

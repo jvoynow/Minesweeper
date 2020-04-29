@@ -23,7 +23,6 @@
 
 
 #include <iostream>
-#include <memory>
 #include <ctime>
 #include <vector>
 
@@ -63,43 +62,24 @@
 
     void display_loss();
 
-    void flag_user_board(int row, int col);
-
-    void click_user_board(int row, int col);
-
-    void zero_search(int row, int col, vector<vector<int>> &coords);
-
-    static bool exists_in_history(int row, int col, vector<vector<int>> coords);
-
-    vector<vector<unique_ptr<Tile>>> create_board(bool blank);
-
-    void add_bombs(int row, int col);
-
-    static vector<vector<int>> get_invalid_positions(int row, int col);
-
-    void update_safe_spaces_helper(int x, int y);
-
-    void update_safe_spaces(int x, int y);
-
-
-    enum Color {
-        DARK_GREEN,
-        LIGHT_GREEN,
-        DARK_BROWN,
-        LIGHT_BROWN,
-        ONE,
-        TWO,
-        THREE,
-        FOUR,
-        FIVE,
-        SIX,
-        SEVEN,
-        EIGHT,
-        WHITE,
-        WHITE_HOVER,
-        BLACK,
-        MENU_BACKGROUND
-    };
+enum Color {
+    DARK_GREEN,
+    LIGHT_GREEN,
+    DARK_BROWN,
+    LIGHT_BROWN,
+    ONE,
+    TWO,
+    THREE,
+    FOUR,
+    FIVE,
+    SIX,
+    SEVEN,
+    EIGHT,
+    WHITE,
+    WHITE_HOVER,
+    BLACK,
+    MENU_BACKGROUND
+};
     static const struct {
         double r, g, b;
     } colors[] = {

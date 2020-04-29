@@ -1,18 +1,17 @@
 #include "Graphics.h"
+#include "Game.h"
+
 #include <iostream>
 #include <vector>
 
 using namespace std;
 
 GLdouble width, height, padding;
-int num_columns = 0, num_rows = 0, moves = 0;
-int wd;
 Button easy, intermediate, expert, main_menu;
-vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
-vector<vector<unique_ptr<Tile>>> user_interface_board;// user sees this, starts empty
-int bomb_count;
-bool won, game_over;
 
+int wd;
+int num_columns = 8, num_rows = 8, bomb_count = 10;
+Game game(8,8,10);
 
 void init() {
     width = 1240;
@@ -53,19 +52,16 @@ void display() {
     } //else if (game.is_over()) {
     //}
     else {
-        if (game.is_over()) {
+        if (game.get_game_over()) {
             display_loss();
-        } else if (moves == 0) {
-            completed_board = create_board(false);
-            user_interface_board = create_board (true);
+        } else if (!game.get_moves()) {
+
+            game.create_board_helper(padding, width, height);
+
         }
         create_main_menu_button();
 
-        for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
-            for (unique_ptr<Tile> &tile : row_tiles) {
-                tile->draw();
-            }
-        }
+        game.draw();
     }
 
     display_creators();
@@ -230,335 +226,55 @@ void cursor(int x, int y) {
                 tile->stop_hover();
             }
         }
-    }*/
+    } */
 
     glutPostRedisplay();
 }
-
 
 // button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
 // state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
+//        if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+//            if (easy.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
+//                num_rows = 8;
+//                num_columns = 8;
+//                bomb_count = 10;
+//                Game game(num_rows, num_columns, bomb_count);
+//            } else if (intermediate.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
+//                num_rows = 16;
+//                num_columns = 16;
+//                bomb_count = 40;
+//                Game game(num_rows, num_columns, bomb_count);
+//            } else if (expert.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
+//                num_rows = 16;
+//                num_columns = 30;
+//                bomb_count = 99;
+//                Game game(num_rows, num_columns, bomb_count);
+//            }
+//            if (main_menu.is_overlapping(x, y) && num_rows != 0 && num_columns != 0) {
+//                num_columns = 0;
+//                num_rows = 0;
+//                bomb_count = 0;
+//            }
+//        }
+
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
-        if (easy.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
-            num_rows = 8;
-            num_columns = 8;
-            bomb_count = 10;
-            moves = 0;
-            game.set_is_over(false);
-        } else if (intermediate.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
-            num_rows= 16;
-            num_columns = 16;
-            bomb_count = 40;
-            moves = 0;
-            game.set_is_over(false);
-        } else if (expert.is_overlapping(x, y) && num_rows == 0 && num_columns == 0) {
-            num_rows= 16;
-            num_columns = 30;
-            bomb_count = 99;
-            moves = 0;
-            game.set_is_over(false);
-        } else if (main_menu.is_overlapping(x, y) && num_rows != 0 && num_columns != 0) {
-            num_columns = 0;
-            num_rows = 0;
-            bomb_count = 0;
-            moves = 0;
-            game.set_is_over(false);
-        } else if (num_rows != 0 && num_columns != 0) { // TODO: If not won or game over
-            for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
-                for (unique_ptr<Tile> &tile : row_tiles) {
-                    if (tile->is_overlapping(x, y)) {
-                        if (moves == 0) {
-                            add_bombs(tile->get_row(), tile->get_column());
-                            click_user_board(tile->get_row(), tile->get_column());
-                        } else {
-                            click_user_board(tile->get_row(), tile->get_column());
-                        }
-                        moves++;
-                    }
-                }
-            }
-        }
-
-    } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game_over && !won) {
-        for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
-            for (unique_ptr<Tile> &tile : row_tiles) {
-                if (tile->is_overlapping(x, y)) {
-                    flag_user_board(tile->get_row(), tile->get_column());
-                }
-            }
-        }
+        game.left_click(x, y, padding, width, height);
     }
-
+    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game.get_game_over() && !game.get_win()) {
+        game.flag(x, y, padding, width, height);
+    }
     glutPostRedisplay();
+}
+
+void mouse2(int button, int state, int x, int y) {
+
+
 }
 
 void timer(int dummy) {
-
     glutPostRedisplay();
     glutTimerFunc(30, timer, dummy);
-}
-
-void update_safe_spaces(int x, int y) {
-    int adjacent_bombs = completed_board[x][y]->get_adj_bombs();
-    if (adjacent_bombs != -1) {
-        adjacent_bombs++;
-    }
-    completed_board[x][y]->set_adj_bombs(adjacent_bombs);
-}
-
-void update_safe_spaces_helper(int x, int y) {
-    int row_out_of_bounds = num_rows - 1;
-    int col_out_of_bounds = num_columns - 1;
-
-    // edge cases for top three adjacent positions
-    if (x > 0) {
-        if (y > 0) { update_safe_spaces(x - 1, y - 1); } // top left
-        if (y < col_out_of_bounds) { update_safe_spaces(x - 1, y + 1); } // top right
-        update_safe_spaces(x - 1, y); // top
-    }
-
-    // edge cases for bottom three adjacent positions
-    if (x < row_out_of_bounds) {
-        if (y < col_out_of_bounds) { update_safe_spaces(x + 1, y + 1); } // bottom right
-        if (y > 0) { update_safe_spaces(x + 1, y - 1); } // bottom left
-        update_safe_spaces(x + 1, y); // bottom
-    }
-
-    // edge cases for left and right adjacent positions
-    if (y < col_out_of_bounds) { update_safe_spaces(x, y + 1); }  // right
-    if (y > 0) { update_safe_spaces(x, y - 1); }                    // left
-}
-
-static vector<vector<int>> get_invalid_positions(int row, int col) {
-    vector<vector<int>> invalid_positions;
-    invalid_positions.push_back({row, col});
-    invalid_positions.push_back({row, col + 1});
-    invalid_positions.push_back({row, col - 1});
-    invalid_positions.push_back({row + 1, col + 1});
-    invalid_positions.push_back({row + 1, col - 1});
-    invalid_positions.push_back({row + 1, col});
-    invalid_positions.push_back({row - 1, col + 1});
-    invalid_positions.push_back({row - 1, col - 1});
-    invalid_positions.push_back({row - 1, col});
-
-    return invalid_positions;
-}
-
-void add_bombs(int row, int col) {
-    vector<vector<int>> invalid_positions = get_invalid_positions(row, col);
-
-    srand(time(nullptr));
-    int x; // row
-    int y; // column
-
-    for (int i = 0; i < bomb_count; ++i) {
-        while (true) {
-
-            bool found = false;
-            x = rand() % num_rows;
-            y = rand() % num_columns;
-
-            for (vector<int> &coord : invalid_positions) {
-                if (coord[0] == x and coord[1] == y) {
-                    found = true;
-                }
-            }
-            if (!found) {
-                break;
-            }
-        }
-
-        // check if bomb exists in given position
-        if (completed_board[x][y]->get_adj_bombs() != -1) {
-            Selected_bomb bomb;
-
-            color current_fill, original_fill, hover_fill;
-            int temp = x;
-            if (y % 2 == 0) {
-                ++temp;
-            }
-            if (temp % 2 == 1) {
-                original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-                current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-                // TODO Change this
-                hover_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-            } else {
-                original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-                current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-                // TODO Change this
-                hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-            }
-
-            bomb.set_x1(padding + ((row - 1)* ((width - padding)/ num_columns)));
-            bomb.set_x2(padding + (row * ((width - padding)/ num_columns)));
-            bomb.set_y1((col - 1) * (height)/ num_rows);
-            bomb.set_y2(col * (height)/ num_rows);
-
-            bomb.set_current_fill(current_fill);
-            bomb.set_original_fill(original_fill);
-            bomb.set_hover_fill(hover_fill);
-
-            bomb.set_row(row);
-            bomb.set_column(col);
-            unique_ptr<Selected_bomb> unique_bomb_ptr = make_unique<Selected_bomb>(bomb);
-            completed_board[x][y] = move(unique_bomb_ptr);
-            update_safe_spaces_helper(x, y);
-        }
-    }
-}
-
-vector<vector<unique_ptr<Tile>>> create_board(bool blank) {
-    vector<vector<unique_ptr<Tile>>> new_board;
-    color current_fill, original_fill, hover_fill;
-    for (int y = 0; y < num_rows; ++y) {
-        vector<unique_ptr<Tile>> row;
-        for (int x = 0; x < num_columns; ++x) {
-            if (blank) {
-                Unselected_tile unselected;
-                int temp = x;
-                if (y % 2 == 0) {
-                    ++temp;
-                }
-                if (temp % 2 == 1) {
-                    original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-                    current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-                    // TODO Change this
-                    hover_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-
-                } else {
-                    original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-                    current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-                    // TODO Change this
-                    hover_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-                }
-                unselected.set_current_fill(current_fill);
-                unselected.set_original_fill(original_fill);
-                unselected.set_hover_fill(hover_fill);
-
-                unselected.set_x1(padding + (x * ((width - padding)/ num_columns)));
-                unselected.set_x2(padding + ((x + 1) * ((width - padding)/ num_columns)));
-                unselected.set_y1(y * (height)/ num_rows);
-                unselected.set_y2((y + 1) * (height)/ num_rows);
-
-                unselected.set_row(x);
-                unselected.set_column(y);
-
-                row.push_back(move(make_unique<Unselected_tile>(unselected)));
-            } else {
-                Selected_safe space;
-
-                int temp = x;
-                if (y % 2 == 0) {
-                    ++temp;
-                }
-                if (temp % 2 == 1) {
-                    original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-                    current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-                    // TODO Change this
-                    hover_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-                } else {
-                    original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-                    current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-                    // TODO Change this
-                    hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-                }
-
-                space.set_x1(padding + (x * ((width - padding)/ num_columns)));
-                space.set_x2(padding + ((x + 1) * ((width - padding)/ num_columns)));
-                space.set_y1(y * (height)/ num_rows);
-                space.set_y2((y + 1) * (height)/ num_rows);
-
-                space.set_current_fill(current_fill);
-                space.set_original_fill(original_fill);
-                space.set_hover_fill(hover_fill);
-
-                space.set_row(x);
-                space.set_column(y);
-
-                row.push_back(move(make_unique<Selected_safe>(space)));
-            }
-        }
-        new_board.push_back(move(row));
-    }
-    return new_board;
-}
-
-static bool exists_in_history(int row, int col, vector<vector<int>> coords) {
-    bool exists = false;
-    for (int i = 0; i < coords.size(); ++i) {
-        if (coords[i][0] == row and coords[i][1] == col) {
-            exists = true;
-        }
-    }
-    return exists;
-}
-
-void zero_search(int row, int col, vector<vector<int>> &coords) {
-    if (row > num_rows - 1 or col > num_columns - 1 or row < 0 or col < 0) {
-        return;
-    }
-    if (exists_in_history(row, col, coords)) {
-        return;
-    } else {
-        coords.push_back({row, col});
-    }
-    if (completed_board[row][col]->get_adj_bombs() == 0) {
-        zero_search(row, col + 1, coords);
-        zero_search(row, col - 1, coords);
-        zero_search(row + 1, col, coords);
-        zero_search(row + 1, col + 1, coords);
-        zero_search(row + 1, col - 1, coords);
-        zero_search(row - 1, col, coords);
-        zero_search(row - 1, col + 1, coords);
-        zero_search(row - 1, col - 1, coords);
-    }
-    user_interface_board[row][col] = move(completed_board[row][col]);
-}
-
-void click_user_board(int row, int col) {
-    if (completed_board[row][col]->get_adj_bombs() == -1) {
-        user_interface_board[row][col] = move(completed_board[row][col]);
-        game_over = true;
-    } else {
-        vector<vector<int>> coords;
-        zero_search(row, col, coords);
-    }
-}
-
-void flag_user_board(int row, int col) {
-    Unselected_flag flag;
-    int temp = col;
-    color current_fill, original_fill, hover_fill;
-    if (row % 2 == 0) {
-        ++temp;
-    }
-    if (temp % 2 == 1) {
-        original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-        current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-        // TODO Change this
-        hover_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-
-    } else {
-        original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-        current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-        // TODO Change this
-        hover_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-    }
-
-
-    flag.set_x1(padding + ((row - 1)* ((width - padding)/ num_columns)));
-    flag.set_x2(padding + (row * ((width - padding)/ num_columns)));
-    flag.set_y1((col - 1) * (height)/ num_rows);
-    flag.set_y2(col * (height)/ num_rows);
-
-    flag.set_current_fill(current_fill);
-    flag.set_original_fill(original_fill);
-    flag.set_hover_fill(hover_fill);
-
-    flag.set_row(row);
-    flag.set_column(col);
-    user_interface_board[row][col] = move(make_unique<Unselected_flag>(flag));
 }
 
 /* Main function: GLUT runs as a console application starting at main()  */
@@ -595,6 +311,7 @@ int main(int argc, char** argv) {
 
     // Enter the event-processing loop
     glutMainLoop();
+
     return 0;
 }
 

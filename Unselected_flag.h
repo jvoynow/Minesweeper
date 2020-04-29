@@ -6,8 +6,7 @@
 
 class Unselected_flag : public Tile {
 public:
-    Unselected_flag() {
-    }
+    Unselected_flag() = default;
 
     void draw() const override {
         // TODO: Change this
