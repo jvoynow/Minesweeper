@@ -121,10 +121,10 @@ public:
         }
 
 
-        flag.set_x1(padding + ((row - 1)* ((width - padding)/ num_cols)));
-        flag.set_x2(padding + (row * ((width - padding)/ num_cols)));
-        flag.set_y1((col - 1) * (height)/ num_rows);
-        flag.set_y2(col * (height)/ num_rows);
+        flag.set_x1(padding + (col * ((width - padding)/ num_cols)));
+        flag.set_x2(padding + ((col + 1) * ((width - padding)/ num_cols)));
+        flag.set_y1((row) * (height)/ num_rows);
+        flag.set_y2((row + 1) * (height)/ num_rows);
 
         flag.set_current_fill(current_fill);
         flag.set_original_fill(original_fill);

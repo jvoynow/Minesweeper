@@ -10,7 +10,8 @@ public:
 
     void draw() const override {
         // TODO: Change this
-        glColor3f(current_fill.r,current_fill.g,current_fill.b);
+        //glColor3f(current_fill.r,current_fill.g,current_fill.b);
+        glColor3f(1,0,0);
         glBegin(GL_QUADS);
         glVertex2i(x1, y1);
         glVertex2i(x2, y1);
@@ -19,15 +20,14 @@ public:
         glEnd();
 
 
-        // TODO: Draw Flag here
 
-        unsigned char filler[] = "12";
-        int num = 12;
-        glColor3f(0,0,0);
-        glRasterPos2i(x1 + (0.5 * (x2 - x1)) - (0.5 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, filler)),
-                      y1 + (0.5 * (y2 - y1)) + (0.75 * glutBitmapLength(GLUT_BITMAP_HELVETICA_18, filler)));
-        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, reinterpret_cast<int>('0' + num));
-        glEnd();
+//        //flag
+//        glColor3f(1,0,0);
+//        glBegin(GL_TRIANGLES);
+//        glVertex2i(x2 + 40, y1 + 20);
+//        glVertex2i(x2 + 40, y1 + 60);
+//        glVertex2i(x2 + 10, y1 + 40);
+//        glEnd();
     }
 };
 
