@@ -84,11 +84,14 @@ public:
     void flag_user_board(int row, int col, int padding, int width, int height);
 
 
-    //TODO: J can you do this one
+
     /**
-     *
-     * @param row:
-     * @param col:
+     * Called upon the instance of a left click on a non-bomb tile.
+     * Adds clicked tiles coordinates to a list or history of previously chosen tiles.
+     * If tile has zero adjacent bombs, this function recursively calls zero_search on
+     * all adjacent tiles to create a local set of tiles to display.
+     * @param row: row of chosen tile
+     * @param col: col of chosen tile
      */
     void zero_search(int row, int col);
 
