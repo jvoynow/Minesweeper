@@ -96,6 +96,18 @@ public:
         }
     }
 
+    void hover(int pixel_x, int pixel_y) {
+        for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
+            for (unique_ptr<Tile> &tile : row_tiles) {
+                if (tile->is_overlapping(pixel_x, pixel_y)) {
+                    tile->hover();
+                } else {
+                    tile->stop_hover();
+                }
+            }
+        }
+    }
+
     void flag(int pixel_x, int pixel_y, int padding, int width, int height) {
         for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
             for (unique_ptr<Tile> &tile : row_tiles) {
@@ -117,16 +129,12 @@ public:
         if (temp % 2 == 1) {
             original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
             current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-            // TODO Change this
-            hover_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-
         } else {
             original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
             current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-            // TODO Change this
-            hover_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
         }
 
+        hover_fill = {colors[GREEN_HOVER].r, colors[GREEN_HOVER].g,colors[GREEN_HOVER].b};
 
         flag.set_c1(padding + (col * ((width - padding)/ num_cols)));
         flag.set_c2(padding + ((col + 1) * ((width - padding)/ num_cols)));
@@ -210,15 +218,13 @@ public:
                     if (temp % 2 == 1) {
                         original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
                         current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-                        // TODO Change this
-                        hover_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-
                     } else {
                         original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
                         current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-                        // TODO Change this
-                        hover_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
                     }
+
+                    hover_fill = {colors[GREEN_HOVER].r, colors[GREEN_HOVER].g,colors[GREEN_HOVER].b};
+
                     unselected.set_current_fill(current_fill);
                     unselected.set_original_fill(original_fill);
                     unselected.set_hover_fill(hover_fill);
@@ -241,14 +247,12 @@ public:
                     if (temp % 2 == 1) {
                         original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
                         current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-                        // TODO Change this
-                        hover_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
                     } else {
                         original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
                         current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-                        // TODO Change this
-                        hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
                     }
+
+                    hover_fill = {colors[BROWN_HOVER].r, colors[BROWN_HOVER].g,colors[BROWN_HOVER].b};
 
                     space.set_c1(padding + (col * ((width - padding)/ num_cols)));
                     space.set_c2(padding + ((col + 1) * ((width - padding)/ num_cols)));
@@ -306,14 +310,12 @@ public:
                 if (temp % 2 == 1) {
                     original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
                     current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-                    // TODO Change this
-                    hover_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
                 } else {
                     original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
                     current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-                    // TODO Change this
-                    hover_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
                 }
+
+                hover_fill = {colors[BROWN_HOVER].r, colors[BROWN_HOVER].g,colors[BROWN_HOVER].b};
 
                 bomb.set_c1(padding + (y * ((width - padding)/ num_cols)));
                 bomb.set_c2(padding + ((y + 1 )* ((width - padding)/ num_cols)));

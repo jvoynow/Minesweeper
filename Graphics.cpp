@@ -230,16 +230,8 @@ void cursor(int x, int y) {
     } else {
         main_menu.stop_hover();
     }
-
-//    for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
-//        for (unique_ptr<Tile> &tile : row_tiles) {
-//            if (tile->is_overlapping(x, y)) {
-//                tile->hover();
-//            } else {
-//                tile->stop_hover();
-//            }
-//        }
-//    }
+    
+    game.hover(x, y);
 
     glutPostRedisplay();
 }

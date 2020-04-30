@@ -67,16 +67,10 @@
 enum Color {
     DARK_GREEN,
     LIGHT_GREEN,
+    GREEN_HOVER,
     DARK_BROWN,
     LIGHT_BROWN,
-    ONE,
-    TWO,
-    THREE,
-    FOUR,
-    FIVE,
-    SIX,
-    SEVEN,
-    EIGHT,
+    BROWN_HOVER,
     WHITE,
     WHITE_HOVER,
     BLACK,
@@ -87,18 +81,11 @@ enum Color {
     } colors[] = {
             {155.0/255.0, 200.0/255.0, 65.0/255.0}, // Dark Green
             {171.0/255.0, 214.0/255.0, 81.0/255.0}, // Light Green
+            {200.0/255.0, 235.0/255.0, 120.0/255.0}, // Green Hover
 
             {200.0/255.0, 143.0/255.0, 87.0/255.0}, // Dark Brown
             {213.0/255.0, 169.0/255.0, 125.0/255.0},// Light Brown
-
-            {0, 0, 1}, // One
-            {0, 128.0/255.0, 0}, // Two
-            {1, 0, 0}, // Three
-            {0, 0 , 128.0/255.0}, // Four
-            {128.0/255.0, 0, 0}, // Five
-            {0, 128.0/255.0, 128.0/255.0}, // Six
-            {0,0,0}, // Seven
-            {128.0/255.0, 128.0/255.0, 128.0/255.0}, // Eight
+            {226.0/255.0, 193.0/255.0, 170.0/255.0}, // Brown Hover
 
             {1.0,1.0,1.0}, // White
             {220.0/255.0, 220.0/255.0, 220.0/255.0}, // White hover

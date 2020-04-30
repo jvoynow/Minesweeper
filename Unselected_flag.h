@@ -40,7 +40,7 @@ public:
         glBegin(GL_TRIANGLES);
         glVertex2i((c2 - c1) / 2 + c1 - 1.5, r1 + ((r2 - r1) / 2));
         glVertex2i((c2 - c1) / 2 + c1 - 1.5, r1 + ((r2 - r1) / 6));
-        glVertex2i(c2 - 5, r1 + ((r2 - r1) / 3));
+        glVertex2i(c2 - ((c2 - c1) / 10), r1 + ((r2 - r1) / 3));
         glEnd();
     }
 };
