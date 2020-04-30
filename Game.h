@@ -20,15 +20,11 @@ private:
     vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
     vector<vector<unique_ptr<Tile>>> user_interface_board; // user sees this, starts empty
     vector<vector<int>> coords;
-    int num_rows, num_cols;
-    int bomb_count;
+    int num_rows, num_cols, bomb_count, steps_until_win, moves;
     bool win, game_over;
-    int steps_until_win, moves;
 
 public:
-//    Game() {
-//
-//    }
+
     Game() {
         win = false;
         game_over = false;
@@ -169,7 +165,6 @@ public:
             return;
         } else {
             coords.push_back({row, col});
-            --steps_until_win;
         }
         if (completed_board[row][col]->get_adj_bombs() == 0) {
             zero_search(row, col + 1);
@@ -182,6 +177,7 @@ public:
             zero_search(row - 1, col - 1);
         }
         user_interface_board[row][col] = move(completed_board[row][col]);
+        --steps_until_win;
     }
 
     bool exists_in_history(int row, int col) {
@@ -293,45 +289,42 @@ public:
                         found = true;
                     }
                 }
-                if (!found) {
+                if (!found && completed_board[x][y]->get_adj_bombs() != -1) {
                     break;
                 }
             }
 
-            // check if bomb exists in given position
-            if (completed_board[x][y]->get_adj_bombs() != -1) {
-                Selected_bomb bomb;
+            Selected_bomb bomb;
 
-                color current_fill, original_fill, hover_fill;
-                int temp = x;
-                if (y % 2 == 0) {
-                    ++temp;
-                }
-                if (temp % 2 == 1) {
-                    original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-                    current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
-                } else {
-                    original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-                    current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
-                }
-
-                hover_fill = {colors[BROWN_HOVER].r, colors[BROWN_HOVER].g,colors[BROWN_HOVER].b};
-
-                bomb.set_c1(padding + (y * ((width - padding)/ num_cols)));
-                bomb.set_c2(padding + ((y + 1 )* ((width - padding)/ num_cols)));
-                bomb.set_r1(x * (height)/ num_rows);
-                bomb.set_r2((x + 1) * (height)/ num_rows);
-
-                bomb.set_current_fill(current_fill);
-                bomb.set_original_fill(original_fill);
-                bomb.set_hover_fill(hover_fill);
-
-                bomb.set_row(row);
-                bomb.set_column(col);
-                unique_ptr<Selected_bomb> unique_bomb_ptr = make_unique<Selected_bomb>(bomb);
-                completed_board[x][y] = move(unique_bomb_ptr);
-                update_safe_spaces_helper(x, y);
+            color current_fill, original_fill, hover_fill;
+            int temp = x;
+            if (y % 2 == 0) {
+                ++temp;
             }
+            if (temp % 2 == 1) {
+                original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+                current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+            } else {
+                original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+                current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+            }
+
+            hover_fill = {colors[BROWN_HOVER].r, colors[BROWN_HOVER].g,colors[BROWN_HOVER].b};
+
+            bomb.set_c1(padding + (y * ((width - padding)/ num_cols)));
+            bomb.set_c2(padding + ((y + 1 )* ((width - padding)/ num_cols)));
+            bomb.set_r1(x * (height)/ num_rows);
+            bomb.set_r2((x + 1) * (height)/ num_rows);
+
+            bomb.set_current_fill(current_fill);
+            bomb.set_original_fill(original_fill);
+            bomb.set_hover_fill(hover_fill);
+
+            bomb.set_row(row);
+            bomb.set_column(col);
+            unique_ptr<Selected_bomb> unique_bomb_ptr = make_unique<Selected_bomb>(bomb);
+            completed_board[x][y] = move(unique_bomb_ptr);
+            update_safe_spaces_helper(x, y);
         }
     }
 
