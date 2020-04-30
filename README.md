@@ -2,6 +2,8 @@
 
 # Minesweeper:
 
+*Note to User: You must have freeglut.dll included in your CMakeFiles to run*
+
 ### Difficulties:
 * Beginner
     * 10 Mines
@@ -11,5 +13,5 @@
     * 16 x 16
 * Expert
     * 99 Mines
-    * 30 x 16
+    * 22 x 22
     
