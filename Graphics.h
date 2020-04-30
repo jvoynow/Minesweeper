@@ -14,13 +14,9 @@
 #include <GL/glut.h>
 #endif
 
-#include "Unselected_flag.h"
-#include "Selected_safe.h"
-#include "Selected_bomb.h"
 #include "Tile.h"
-#include "Unselected_tile.h"
 #include "Button.h"
-
+#include "Game.h"
 
 #include <iostream>
 #include <ctime>
@@ -29,40 +25,56 @@
 
 // Program initialization NOT OpenGL/GLUT dependent,
 // as we haven't created a GLUT window yet
-    void init();
+void init();
 
 // Initialize OpenGL Graphics
-    void initGL();
+void initGL();
 
 // Callback functions for GLUT
 
 // Draw the window - this is where all the GL actions are
-    void display();
+void display();
 
 // Trap and process alphanumeric keyboard events
-    void kbd(unsigned char key, int x, int y);
+void kbd(unsigned char key, int x, int y);
 
 
 // Handle "mouse cursor moved" events
-    void cursor(int x, int y);
-
-// Calls itself after a specified time
-    void timer(int dummy);
+void cursor(int x, int y);
 
 // Handle mouse button pressed and released events
-    void mouse(int button, int state, int x, int y);
+void mouse(int button, int state, int x, int y);
 
-    void title();
+/**
+ * Draw the title
+ */
+void title();
 
-    void create_difficulty_buttons();
+/**
+ * Create and draw the three difficulty buttons
+ */
+void create_difficulty_buttons();
 
-    void create_main_menu_button();
+/**
+ * Create and draws the main menu button
+ */
+void create_main_menu_button();
 
-    void display_creators();
 
-    void display_loss();
+/**
+ * Draws Jamie & Parker's names at the bottom
+ */
+void display_creators();
 
-    void display_win();
+/**
+ * Displays a message when the user loses
+ */
+void display_loss();
+
+/**
+ * Displays a message when the user wins
+ */
+void display_win();
 
 enum Color {
     DARK_GREEN,

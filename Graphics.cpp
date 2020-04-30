@@ -1,14 +1,9 @@
 #include "Graphics.h"
-#include "Game.h"
-
-#include <iostream>
-#include <vector>
 
 using namespace std;
 
 GLdouble width, height, padding;
 Button easy, intermediate, expert, main_menu;
-
 int wd;
 Game game;
 bool game_bool = false;
@@ -19,48 +14,48 @@ void init() {
     padding = 300;
 }
 
-/* Initialize OpenGL Graphics */
 void initGL() {
-    // Set "clearing" or background color
+    // Set background color
     glClearColor(colors[MENU_BACKGROUND].r, colors[MENU_BACKGROUND].g, colors[MENU_BACKGROUND].b, 1.0f);
 }
 
-/* Handler for window-repaint event. Call back when the window first appears and
- whenever the window needs to be re-painted. */
 void display() {
     // Tell OpenGL to use the whole window for drawing
-    glViewport(0, 0, width, height); // DO NOT CHANGE THIS LINE
+    glViewport(0, 0, width, height);
 
     // Do an orthographic parallel projection with the coordinate
     // system set to first quadrant, limited by screen/window size
-    glMatrixMode(GL_PROJECTION); // DO NOT CHANGE THIS LINE
-    glLoadIdentity(); // DO NOT CHANGE THIS LINE
-    glOrtho(0.0, width, height, 0.0, -1.f, 1.f); // DO NOT CHANGE THIS LINE
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0.0, width, height, 0.0, -1.f, 1.f);
 
     // Clear the color buffer with current clearing color
-    glClear(GL_COLOR_BUFFER_BIT); // DO NOT CHANGE THIS LINE
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // DO NOT CHANGE THIS LINE
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-
+    // Draw Game title
     title();
 
-
-
+    // Only display difficulty buttons if there is not a game being played
     if (!game_bool) {
         create_difficulty_buttons();
-    }
-    else {
+    } else {
         if (game.get_game_over()) {
+            // Display loss if game is over
             display_loss();
         } else if (game.get_steps_until_win() == 0){
+            // Display win if the user wins
             display_win();
         }
+        // Draw the main menu button
         create_main_menu_button();
 
+        // Draw the board
         game.draw();
     }
 
+    // Draw game creators at the bottom of the menu
     display_creators();
 
     glFlush();  // Render now
@@ -199,7 +194,6 @@ void display_creators() {
     }
 }
 
-
 void kbd(unsigned char key, int x, int y) {
     // escape
     if (key == 27) {
@@ -210,6 +204,7 @@ void kbd(unsigned char key, int x, int y) {
 }
 
 void cursor(int x, int y) {
+    // Handle hovering on each button
     if (easy.is_overlapping(x, y)) {
         easy.hover();
     } else {
@@ -230,16 +225,15 @@ void cursor(int x, int y) {
     } else {
         main_menu.stop_hover();
     }
-    
+    // Handle hovering over any game tile
     game.hover(x, y);
 
     glutPostRedisplay();
 }
 
-// button will be GLUT_LEFT_BUTTON or GLUT_RIGHT_BUTTON
-// state will be GLUT_UP or GLUT_DOWN
 void mouse(int button, int state, int x, int y) {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        // Start game with correct values when difficulty buttons are clicked
         if (easy.is_overlapping(x, y) && !game_bool) {
             game.update_game_members(8, 8, 10);
             game_bool = true;
@@ -253,28 +247,23 @@ void mouse(int button, int state, int x, int y) {
             game_bool = true;
             game.create_board_helper(padding, width, height);
         } else if (main_menu.is_overlapping(x, y) && game_bool) {
+            // Return to difficulty options
             game_bool = false;
         } else if (game_bool && !game.get_game_over() && !game.get_win() && game.get_steps_until_win() != 0) {
+            // Handle clicks on tiles
             game.left_click(x, y, padding, width, height);
         }
-    }
-    else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game.get_game_over() && !game.get_win() && game.get_steps_until_win() != 0) {
+    } else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game.get_game_over() && !game.get_win() && game.get_steps_until_win() != 0) {
+        // Handle flagging a tile if parameters are met
         game.flag(x, y, padding, width, height);
     }
     glutPostRedisplay();
 }
 
-void timer(int dummy) {
-    glutPostRedisplay();
-    glutTimerFunc(30, timer, dummy);
-}
-
-/* Main function: GLUT runs as a console application starting at main()  */
 int main(int argc, char** argv) {
-
-    glutInit(&argc, argv);          // Initialize GLUT
+    // Initialize GLUT
+    glutInit(&argc, argv);
     init();
-
 
     glutInitDisplayMode(GLUT_RGBA);
 
@@ -298,12 +287,8 @@ int main(int argc, char** argv) {
     // handles mouse click
     glutMouseFunc(mouse);
 
-    // handles timer
-    glutTimerFunc(0, timer, 0);
-
     // Enter the event-processing loop
     glutMainLoop();
 
     return 0;
 }
-

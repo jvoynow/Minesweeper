@@ -5,9 +5,14 @@
 
 class Unselected_tile: public Tile {
 public:
+    /**
+     * Constructor
+     */
     Unselected_tile();
-    Unselected_tile(int row, int column);
 
+    /**
+     * Draw the unselected tile
+     */
     void draw() const override;
 };
 

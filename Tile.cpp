@@ -4,6 +4,7 @@ using namespace std;
 
 Tile::Tile() {
 }
+
 bool Tile::get_flagged() const {
     return flagged;
 }
@@ -69,6 +70,6 @@ void Tile::stop_hover() {
 }
 
 bool Tile::is_overlapping(int x, int y) const {
-    return x >= c1 && y >= r1 && x <= c2 && y <= r2;
+    return x > c1 && y > r1 && x < c2 && y < r2;
 }
 

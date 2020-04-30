@@ -8,6 +8,7 @@ Unselected_flag::Unselected_flag(){
 }
 
 void Unselected_flag::draw() const {
+    // Draw the tile
     glColor3f(current_fill.r,current_fill.g,current_fill.b);
     glBegin(GL_QUADS);
     glVertex2i(c1, r1);
@@ -16,7 +17,7 @@ void Unselected_flag::draw() const {
     glVertex2i(c1, r2);
     glEnd();
 
-    // Pole
+    // Draw the flag pole
     glColor3f(0,0,0);
     glBegin(GL_QUADS);
     glVertex2i((c2 - c1) / 2 + c1 - 1.5, r1 + ((r2 - r1) / 4));
@@ -25,7 +26,7 @@ void Unselected_flag::draw() const {
     glVertex2i((c2 - c1) / 2 + c1 + 1.5, r1 + ((r2 - r1) / 4));
     glEnd();
 
-    // Base
+    // Draw the flag base
     glColor3f(0,0,0);
     glBegin(GL_QUADS);
     glVertex2i((c2 - c1) / 2.5 + c1 , r2 - ((r2 - r1) / 6));
@@ -34,7 +35,7 @@ void Unselected_flag::draw() const {
     glVertex2i(c2 - ((c2 - c1) / 2.5), r2 - ((r2 - r1) / 6));
     glEnd();
 
-    // Flag
+    // Draw the flag
     glColor3f(1,0,0);
     glBegin(GL_TRIANGLES);
     glVertex2i((c2 - c1) / 2 + c1 - 1.5, r1 + ((r2 - r1) / 2));

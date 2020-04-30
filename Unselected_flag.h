@@ -5,7 +5,14 @@
 
 class Unselected_flag : public Tile {
 public:
+    /**
+     * Constructor
+     */
     Unselected_flag();
+
+    /**
+     * Draw the flag tile and graphic
+     */
     void draw() const override;
 };
 

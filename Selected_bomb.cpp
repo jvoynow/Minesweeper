@@ -6,6 +6,7 @@ Selected_bomb::Selected_bomb() : Tile() {
 }
 
 void Selected_bomb::draw() const {
+    // Draw tile
     glColor3f(current_fill.r, current_fill.g, current_fill.b);
     glBegin(GL_QUADS);
     glVertex2i(c1, r1);
@@ -14,7 +15,7 @@ void Selected_bomb::draw() const {
     glVertex2i(c1, r2);
     glEnd();
 
-    // Spikes
+    // Draw spikes
     glColor3f(0, 0, 0);
     glBegin(GL_QUADS);
     glVertex2i((c2 - c1) / 2 + 1.5 + c1, (r2 - r1) / 6 + r1);
@@ -32,7 +33,7 @@ void Selected_bomb::draw() const {
     glEnd();
 
 
-    // Cirle-ish outline
+    // Draw "circle"
     glColor3f(0, 0, 0);
     glBegin(GL_TRIANGLE_FAN);
     glVertex2i((c2 - c1) / 2 + c1, (r2 - r1) / 2 + r1);
@@ -48,7 +49,7 @@ void Selected_bomb::draw() const {
     glVertex2i((c2 - c1) / 2 + c1, (r2 - r1) / 4 + r1);
     glEnd();
 
-    // Square shine
+    // Draw square shine
     glColor3f(1.0,1.0,1.0);
     glBegin(GL_QUADS);
     glVertex2i((c2 - c1) / 2.3 + c1, (r2 - r1) / 2.5 + r1);

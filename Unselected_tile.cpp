@@ -8,15 +8,8 @@ Unselected_tile::Unselected_tile(){
     adj_bombs = 10;
 }
 
-Unselected_tile::Unselected_tile(int row, int column) {
-    this->row = row;
-    this->column = column;
-    flagged = false;
-    adj_bombs = 10;
-}
-
-
 void Unselected_tile::draw() const  {
+    // Draw tile at given tile's coordinates
     glColor3f(current_fill.r,current_fill.g,current_fill.b);
     glBegin(GL_QUADS);
     glVertex2i(c1, r1);

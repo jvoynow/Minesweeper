@@ -5,9 +5,15 @@
 
 class Selected_bomb : public Tile {
 public:
+    /**
+     * Constructor
+     */
     Selected_bomb();
-    void draw() const override;
 
+    /**
+     * Draws the tile, and bomb graphic in the correct location
+     */
+    void draw() const override;
 };
 
 #endif //PS_JV_GRAPHICS_FINAL_SELECTED_BOMB_H

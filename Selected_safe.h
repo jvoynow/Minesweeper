@@ -5,7 +5,14 @@
 
 class Selected_safe : public Tile {
 public:
+    /**
+     * Constructor
+     */
     Selected_safe();
+
+    /**
+     * Draws the safe space tile with corresponding adjacent bomb count
+     */
     void draw() const override;
 };
 

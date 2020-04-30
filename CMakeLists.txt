@@ -28,7 +28,7 @@ file(GLOB SOURCE_FILES
         *.h
         )
 
-add_executable(graphics Button.cpp Button.h Unselected_flag.h Selected_bomb.h Selected_safe.h Tile.h Unselected_tile.h Graphics.h Graphics.cpp Game.h Selected_bomb.cpp Selected_safe.cpp Tile.cpp Unselected_flag.cpp Unselected_tile.cpp)
+add_executable(graphics Button.cpp Button.h Unselected_flag.h Selected_bomb.h Selected_safe.h Tile.h Unselected_tile.h Graphics.h Graphics.cpp Game.h Selected_bomb.cpp Selected_safe.cpp Tile.cpp Unselected_flag.cpp Unselected_tile.cpp Game.cpp)
 
 if (WIN32)
     target_link_libraries (graphics ${OPENGL_LIBRARIES} freeglut)
