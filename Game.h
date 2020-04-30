@@ -146,7 +146,6 @@ public:
             user_interface_board[row][col] = move(completed_board[row][col]);
             game_over = true;
         } else {
-            cout << row << " " << col << endl;
             zero_search(row, col);
             --steps_until_win;
         }
@@ -165,8 +164,6 @@ public:
             return;
         }
         if (exists_in_history(row, col)) {
-            cout << "basecase return: ";
-            cout << row << " " << col << endl;
             return;
         } else {
             coords.push_back({row, col});
