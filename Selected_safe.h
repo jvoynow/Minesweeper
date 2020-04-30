@@ -28,7 +28,7 @@ public:
             glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, reinterpret_cast<int>('0' + adj_bombs));
             glEnd();
         }
-        }
+    }
 
 };
 

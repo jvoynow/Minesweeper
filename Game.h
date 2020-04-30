@@ -33,7 +33,6 @@ public:
         win = false;
         game_over = false;
         moves = 0;
-        coords = {};
     }
 
     void update_game_members(int num_rows, int num_cols, int bomb_count) {
@@ -53,6 +52,10 @@ public:
 
     void set_bomb_count(int bomb_count) {
         this->bomb_count = bomb_count;
+    }
+
+    int get_steps_until_win() const {
+        return steps_until_win;
     }
 
     int get_num_rows() const {
@@ -147,15 +150,6 @@ public:
             game_over = true;
         } else {
             zero_search(row, col);
-            --steps_until_win;
-        }
-    }
-
-    void update_board_for_win() {
-        for (int i = 0; i < num_rows; ++i) {
-            for (int j = 0; j < num_cols; ++j) {
-
-            }
         }
     }
 
@@ -167,6 +161,7 @@ public:
             return;
         } else {
             coords.push_back({row, col});
+            --steps_until_win;
         }
         if (completed_board[row][col]->get_adj_bombs() == 0) {
             zero_search(row, col + 1);
@@ -178,7 +173,6 @@ public:
             zero_search(row - 1, col + 1);
             zero_search(row - 1, col - 1);
         }
-
         user_interface_board[row][col] = move(completed_board[row][col]);
     }
 
@@ -189,13 +183,16 @@ public:
                 exists = true;
             }
         }
-
         return exists;
     }
 
     void create_board_helper(int padding, int width, int height) {
         completed_board = create_board(false, padding, width, height);
         user_interface_board = create_board (true, padding, width, height);
+        coords = {};
+        moves = 0;
+        game_over = false;
+        win = false;
     }
 
     vector<vector<unique_ptr<Tile>>> create_board(bool blank, int padding, int width, int height) {

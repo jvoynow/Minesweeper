@@ -62,6 +62,8 @@
 
     void display_loss();
 
+    void display_win();
+
 enum Color {
     DARK_GREEN,
     LIGHT_GREEN,

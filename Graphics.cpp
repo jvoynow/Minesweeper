@@ -53,10 +53,8 @@ void display() {
     else {
         if (game.get_game_over()) {
             display_loss();
-        } else if (!game.get_moves()) {
-
-            game.create_board_helper(padding, width, height);
-
+        } else if (game.get_steps_until_win() == 0){
+            display_win();
         }
         create_main_menu_button();
 
@@ -149,6 +147,22 @@ void display_loss() {
     }
 }
 
+void display_win() {
+    unsigned char congrats[] = "CONGRATS!";
+    int w = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, congrats);
+    glRasterPos2i((double) padding / 2 - (double) w / 2, 300);
+    glColor3f(colors[BLACK].r, colors[BLACK].g, colors[BLACK].b);
+    for (char c : congrats) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+    unsigned char won[] = "YOU WON";
+    int w_again = glutBitmapLength(GLUT_BITMAP_TIMES_ROMAN_24, won);
+    glRasterPos2i((double) padding / 2 - (double) w_again / 2, 340);
+    glColor3f(colors[BLACK].r, colors[BLACK].g, colors[BLACK].b);
+    for (char c : won) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+    }
+}
 
 void title() {
     unsigned char title[] = "Minesweeper";
@@ -217,15 +231,15 @@ void cursor(int x, int y) {
         main_menu.stop_hover();
     }
 
-    /*for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
-        for (unique_ptr<Tile> &tile : row_tiles) {
-            if (tile->is_overlapping(x, y)) {
-                tile->hover();
-            } else {
-                tile->stop_hover();
-            }
-        }
-    } */
+//    for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
+//        for (unique_ptr<Tile> &tile : row_tiles) {
+//            if (tile->is_overlapping(x, y)) {
+//                tile->hover();
+//            } else {
+//                tile->stop_hover();
+//            }
+//        }
+//    }
 
     glutPostRedisplay();
 }
@@ -237,19 +251,22 @@ void mouse(int button, int state, int x, int y) {
         if (easy.is_overlapping(x, y) && !game_bool) {
             game.update_game_members(8, 8, 10);
             game_bool = true;
+            game.create_board_helper(padding, width, height);
         } else if (intermediate.is_overlapping(x, y) && !game_bool) {
             game.update_game_members(16, 16, 40);
             game_bool = true;
+            game.create_board_helper(padding, width, height);
         } else if (expert.is_overlapping(x, y) && !game_bool) {
-            game.update_game_members(30, 16, 99);
+            game.update_game_members(22, 22, 99);
             game_bool = true;
+            game.create_board_helper(padding, width, height);
         } else if (main_menu.is_overlapping(x, y) && game_bool) {
             game_bool = false;
-        } else if (game_bool) {
+        } else if (game_bool && !game.get_game_over() && !game.get_win() && game.get_steps_until_win() != 0) {
             game.left_click(x, y, padding, width, height);
         }
     }
-    else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game.get_game_over() && !game.get_win()) {
+    else if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN && !game.get_game_over() && !game.get_win() && game.get_steps_until_win() != 0) {
         game.flag(x, y, padding, width, height);
     }
     glutPostRedisplay();
