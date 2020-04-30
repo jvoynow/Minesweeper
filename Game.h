@@ -170,6 +170,14 @@ public:
      * Draws all tiles in the board using polymorphism
      */
     void draw();
+
+    /**
+     * Adds all bomb locations to the user's board to be displayed when the game has been lost
+     * @param padding: menu padding
+     * @param width: window width
+     * @param height: window height
+     */
+    void lost_game(int padding, int width, int height);
 };
 
 #endif //PS_JV_GRAPHICS_FINAL_GAME_H

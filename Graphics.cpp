@@ -43,6 +43,7 @@ void display() {
     } else {
         if (game.get_game_over()) {
             // Display loss if game is over
+            game.lost_game(padding, width, height);
             display_loss();
         } else if (game.get_steps_until_win() == 0){
             // Display win if the user wins
@@ -226,7 +227,9 @@ void cursor(int x, int y) {
         main_menu.stop_hover();
     }
     // Handle hovering over any game tile
-    game.hover(x, y);
+    if (!game.get_game_over()) {
+        game.hover(x, y);
+    }
 
     glutPostRedisplay();
 }

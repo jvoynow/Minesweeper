@@ -48,6 +48,8 @@ void Game::left_click(int pixel_x, int pixel_y, int padding, int width, int heig
 void Game::click_user_board(int row, int col) {
     if (completed_board[row][col]->get_adj_bombs() == -1) {
         user_interface_board[row][col] = move(completed_board[row][col]);
+        Selected_bomb bomb;
+        completed_board[row][col] = move(make_unique<Selected_bomb>(bomb));
         game_over = true;
     } else {
         zero_search(row, col);
@@ -154,6 +156,8 @@ void Game::zero_search(int row, int col) {
     }
     // update users board
     user_interface_board[row][col] = move(completed_board[row][col]);
+    Selected_safe s;
+    completed_board[row][col] = move(make_unique<Selected_safe>(s));
     --steps_until_win;
 }
 
@@ -412,6 +416,49 @@ void Game::draw() {
             // Polymorphism on tile objects
             tile->draw();
         }
+    }
+}
+
+void Game::lost_game(int padding, int width, int height) {
+    int r = 0, c;
+    for (vector<unique_ptr<Tile>> &row_tiles : completed_board) {
+        c = 0;
+        for (unique_ptr<Tile> &tile : row_tiles) {
+            if (tile->get_adj_bombs() == -1) {
+
+                Selected_bomb bomb;
+                // Set tile colors
+                color current_fill, original_fill, hover_fill;
+                int temp = c;
+                if (r % 2 == 0) {
+                    ++temp;
+                }
+                if (temp % 2 == 1) {
+                    original_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+                    current_fill = {colors[LIGHT_BROWN].r, colors[LIGHT_BROWN].g,colors[LIGHT_BROWN].b};
+                } else {
+                    original_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+                    current_fill = {colors[DARK_BROWN].r, colors[DARK_BROWN].g,colors[DARK_BROWN].b};
+                }
+
+                hover_fill = {colors[BROWN_HOVER].r, colors[BROWN_HOVER].g,colors[BROWN_HOVER].b};
+
+                // Set bounds of the tile
+                bomb.set_c1(padding + (c * ((width - padding)/ num_cols)));
+                bomb.set_c2(padding + ((c + 1 )* ((width - padding)/ num_cols)));
+                bomb.set_r1(r * (height)/ num_rows);
+                bomb.set_r2((r + 1) * (height)/ num_rows);
+
+                bomb.set_current_fill(current_fill);
+                bomb.set_original_fill(original_fill);
+                bomb.set_hover_fill(hover_fill);
+
+                // Move the bomb tile to the user's board
+                user_interface_board[r][c] = move(make_unique<Selected_bomb>(bomb));
+            }
+            ++c;
+        }
+        ++r;
     }
 }
 
