@@ -102,6 +102,7 @@ public:
     // Todo this is the logic for flagging
     void flag_user_board(int row, int col, int padding, int width, int height) {
         Unselected_flag flag;
+        flag.set_selected(true);
         int temp = col;
         color current_fill, original_fill, hover_fill;
         if (row % 2 == 0) {
@@ -139,8 +140,10 @@ public:
     // Todo this is the logic for clicking on the board
     void click_user_board(int row, int col) {
         if (completed_board[row][col]->get_adj_bombs() == -1) {
+            cout << "bomb ";
             user_interface_board[row][col] = move(completed_board[row][col]);
             game_over = true;
+            cout << row << " " << col << endl;
         } else {
             vector<vector<int>> coords;
             zero_search(row, col, coords);
@@ -175,7 +178,10 @@ public:
             zero_search(row - 1, col + 1, coords);
             zero_search(row - 1, col - 1, coords);
         }
-        user_interface_board[row][col] = move(completed_board[row][col]);
+        if (!user_interface_board[row][col]->get_selected()) {
+            user_interface_board[row][col] = move(completed_board[row][col]);
+            cout << user_interface_board[row][col]->get_selected() << endl;
+        }
     }
 
     static bool exists_in_history(int row, int col, vector<vector<int>> coords) {
@@ -202,6 +208,7 @@ public:
             for (int col = 0; col < num_cols; ++col) {
                 if (blank) {
                     Unselected_tile unselected;
+                    unselected.set_selected(false);
                     int temp = col;
                     if (row % 2 == 0) {
                         ++temp;
@@ -233,6 +240,7 @@ public:
                     row_vec.push_back(move(make_unique<Unselected_tile>(unselected)));
                 } else {
                     Selected_safe space;
+                    space.set_selected(true);
 
                     int temp = col;
                     if (row % 2 == 0) {
@@ -297,6 +305,7 @@ public:
             // check if bomb exists in given position
             if (completed_board[x][y]->get_adj_bombs() != -1) {
                 Selected_bomb bomb;
+                bomb.set_selected(true);
 
                 color current_fill, original_fill, hover_fill;
                 int temp = x;
