@@ -19,6 +19,7 @@ class Game {
 private:
     vector<vector<unique_ptr<Tile>>> completed_board; // master board data/info
     vector<vector<unique_ptr<Tile>>> user_interface_board; // user sees this, starts empty
+    vector<vector<int>> coords;
     int num_rows, num_cols;
     int bomb_count;
     bool win, game_over;
@@ -32,6 +33,7 @@ public:
         win = false;
         game_over = false;
         moves = 0;
+        coords = {};
     }
 
     void update_game_members(int num_rows, int num_cols, int bomb_count) {
@@ -77,13 +79,15 @@ public:
         for (vector<unique_ptr<Tile>> &row_tiles : user_interface_board) {
             for (unique_ptr<Tile> &tile : row_tiles) {
                 if (tile->is_overlapping(pixel_x, pixel_y)) {
-                    if (moves == 0) {
-                        add_bombs(tile->get_row(), tile->get_column(), padding, width, height);
-                        click_user_board(tile->get_row(), tile->get_column());
-                    } else {
-                        click_user_board(tile->get_row(), tile->get_column());
+                    if (!exists_in_history(tile->get_row(), tile->get_column())) {
+                        if (moves == 0) {
+                            add_bombs(tile->get_row(), tile->get_column(), padding, width, height);
+                            click_user_board(tile->get_row(), tile->get_column());
+                        } else {
+                            click_user_board(tile->get_row(), tile->get_column());
+                        }
+                        moves++;
                     }
-                    moves++;
                 }
             }
         }
@@ -102,7 +106,6 @@ public:
     // Todo this is the logic for flagging
     void flag_user_board(int row, int col, int padding, int width, int height) {
         Unselected_flag flag;
-        flag.set_selected(true);
         int temp = col;
         color current_fill, original_fill, hover_fill;
         if (row % 2 == 0) {
@@ -143,8 +146,8 @@ public:
             user_interface_board[row][col] = move(completed_board[row][col]);
             game_over = true;
         } else {
-            vector<vector<int>> coords;
-            zero_search(row, col, coords);
+            cout << row << " " << col << endl;
+            zero_search(row, col);
             --steps_until_win;
         }
     }
@@ -157,37 +160,39 @@ public:
         }
     }
 
-    void zero_search(int row, int col, vector<vector<int>> &coords) {
+    void zero_search(int row, int col) {
         if (row > num_rows - 1 or col > num_cols - 1 or row < 0 or col < 0) {
             return;
         }
-        if (exists_in_history(row, col, coords)) {
+        if (exists_in_history(row, col)) {
+            cout << "basecase return: ";
+            cout << row << " " << col << endl;
             return;
         } else {
             coords.push_back({row, col});
         }
         if (completed_board[row][col]->get_adj_bombs() == 0) {
-            zero_search(row, col + 1, coords);
-            zero_search(row, col - 1, coords);
-            zero_search(row + 1, col, coords);
-            zero_search(row + 1, col + 1, coords);
-            zero_search(row + 1, col - 1, coords);
-            zero_search(row - 1, col, coords);
-            zero_search(row - 1, col + 1, coords);
-            zero_search(row - 1, col - 1, coords);
+            zero_search(row, col + 1);
+            zero_search(row, col - 1);
+            zero_search(row + 1, col);
+            zero_search(row + 1, col + 1);
+            zero_search(row + 1, col - 1);
+            zero_search(row - 1, col);
+            zero_search(row - 1, col + 1);
+            zero_search(row - 1, col - 1);
         }
-        if (!user_interface_board[row][col]->get_selected()) {
-            user_interface_board[row][col] = move(completed_board[row][col]);
-        }
+
+        user_interface_board[row][col] = move(completed_board[row][col]);
     }
 
-    static bool exists_in_history(int row, int col, vector<vector<int>> coords) {
+    bool exists_in_history(int row, int col) {
         bool exists = false;
         for (int i = 0; i < coords.size(); ++i) {
             if (coords[i][0] == row and coords[i][1] == col) {
                 exists = true;
             }
         }
+
         return exists;
     }
 
@@ -204,7 +209,6 @@ public:
             for (int col = 0; col < num_cols; ++col) {
                 if (blank) {
                     Unselected_tile unselected;
-                    unselected.set_selected(false);
                     int temp = col;
                     if (row % 2 == 0) {
                         ++temp;
@@ -236,8 +240,6 @@ public:
                     row_vec.push_back(move(make_unique<Unselected_tile>(unselected)));
                 } else {
                     Selected_safe space;
-                    space.set_selected(true);
-
                     int temp = col;
                     if (row % 2 == 0) {
                         ++temp;
@@ -301,7 +303,6 @@ public:
             // check if bomb exists in given position
             if (completed_board[x][y]->get_adj_bombs() != -1) {
                 Selected_bomb bomb;
-                bomb.set_selected(true);
 
                 color current_fill, original_fill, hover_fill;
                 int temp = x;
