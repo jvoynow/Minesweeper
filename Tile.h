@@ -1,13 +1,8 @@
 #ifndef PS_JV_GRAPHICS_FINAL_TILE_H
 #define PS_JV_GRAPHICS_FINAL_TILE_H
 
-
 #include <iostream>
 #include <string>
-#include "Graphics.h"
-
-
-using namespace std;
 
 struct color {
     double r, g, b;
@@ -22,101 +17,40 @@ protected:
     color current_fill, original_fill, hover_fill;
     double c1, c2, r1, r2;
 public:
-    Tile() {
-        display = false;
-    }
+    Tile();
+    bool get_flagged() const;
 
-    bool get_display() const {
-        return display;
-    }
+    int get_row() const;
 
-    bool get_selected() const {
-        return selected;
-    }
+    int get_column() const;
 
-    bool get_flagged() const {
-        return flagged;
-    }
+    int get_adj_bombs();
 
-    int get_row() const {
-        return row;
-    }
+    void set_current_fill(color fill);
 
-    int get_column() const {
-        return column;
-    }
+    void set_original_fill(color fill);
 
-    int get_adj_bombs() {
-        return adj_bombs;
-    }
+    void set_hover_fill(color fill);
 
-    void set_current_fill(color fill) {
-        current_fill = fill;
-    }
+    void set_adj_bombs(int a_b);
 
-    void set_original_fill(color fill) {
-        original_fill = fill;
-    }
+    void set_row(int row);
 
-    void set_hover_fill(color fill) {
-        hover_fill = fill;
-    }
+    void set_column(int column);
 
-    void set_display(bool display) {
-        this->display = display;
-    }
+    void set_c1(double c1);
 
-    void set_selected(bool selected) {
-        this->selected = selected;
-    }
+    void set_c2(double c2);
 
-    void set_flagged(bool flagged) {
-        this->flagged = flagged;
-    }
+    void set_r1(double r1);
 
-    void set_adj_bombs(int a_b) {
-        adj_bombs = a_b;
-    }
+    void set_r2(double r2);
 
-    void set_row(int row) {
-        this->row = row;
-    }
+    void hover();
 
-    void set_column(int column) {
-        this->column = column;
-    }
+    void stop_hover();
 
-    void set_c1(double c1) {
-        this->c1 = c1;
-    }
-
-    void set_c2(double c2) {
-        this->c2 = c2;
-    }
-
-    void set_r1(double r1) {
-        this->r1 = r1;
-    }
-
-    void set_r2(double r2) {
-        this->r2 = r2;
-    }
-
-    void hover() {
-        set_current_fill(hover_fill);
-    }
-
-    void stop_hover() {
-        set_current_fill(original_fill);
-    }
-
-    void add_adj_bomb() {
-        set_adj_bombs(get_adj_bombs() + 1);
-    }
-
-    bool is_overlapping(int x, int y) const {
-        return x >= c1 && y >= r1 && x <= c2 && y <= r2;
-    }
+    bool is_overlapping(int x, int y) const;
 
     virtual void draw() const = 0;
 

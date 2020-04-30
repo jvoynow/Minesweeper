@@ -90,7 +90,7 @@ enum Color {
             {1.0,1.0,1.0}, // White
             {220.0/255.0, 220.0/255.0, 220.0/255.0}, // White hover
             {0, 0, 0}, // Black
-            {92.0/255.0,134.0/255.0,92.0/255.0}, // Menu Background
+            {100.0/255.0, 150.0/255.0, 100.0/255.0}, // Menu Background
     };
 
 #endif //PS_JV_GRAPHICS_FINAL_GRAPHICS_H
