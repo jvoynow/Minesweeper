@@ -8,6 +8,7 @@ class Selected_safe : public Tile {
 public:
     Selected_safe() {
         adj_bombs = 0;
+        flagged = false;
     }
 
     void draw() const override {

@@ -15,7 +15,7 @@ struct color {
 
 class Tile {
 protected:
-    bool display, selected;
+    bool display, selected, flagged;
 
     int adj_bombs;
     int row, column;
@@ -26,12 +26,16 @@ public:
         display = false;
     }
 
-    bool get_display() {
+    bool get_display() const {
         return display;
     }
 
-    bool get_selected() {
+    bool get_selected() const {
         return selected;
+    }
+
+    bool get_flagged() const {
+        return flagged;
     }
 
     int get_row() const {
@@ -64,6 +68,10 @@ public:
 
     void set_selected(bool selected) {
         this->selected = selected;
+    }
+
+    void set_flagged(bool flagged) {
+        this->flagged = flagged;
     }
 
     void set_adj_bombs(int a_b) {

@@ -6,7 +6,10 @@
 
 class Unselected_flag : public Tile {
 public:
-    Unselected_flag() = default;
+    Unselected_flag(){
+        flagged = true;
+        adj_bombs = 10;
+    }
 
     void draw() const override {
         glColor3f(current_fill.r,current_fill.g,current_fill.b);

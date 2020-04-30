@@ -116,38 +116,67 @@ public:
 
     // Todo this is the logic for flagging
     void flag_user_board(int row, int col, int padding, int width, int height) {
-        Unselected_flag flag;
-        int temp = col;
         color current_fill, original_fill, hover_fill;
+        int temp = col;
         if (row % 2 == 0) {
             ++temp;
         }
-        if (temp % 2 == 1) {
-            original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-            current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g,colors[LIGHT_GREEN].b};
-        } else {
-            original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
-            current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g,colors[DARK_GREEN].b};
+        if ((user_interface_board[row][col]->get_adj_bombs() < 0 || user_interface_board[row][col]->get_adj_bombs() > 8)) {
+            if (user_interface_board[row][col]->get_flagged()) {
+                Unselected_tile unselected;
+                if (temp % 2 == 1) {
+                    original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g, colors[LIGHT_GREEN].b};
+                    current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g, colors[LIGHT_GREEN].b};
+                } else {
+                    original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g, colors[DARK_GREEN].b};
+                    current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g, colors[DARK_GREEN].b};
+                }
+
+                hover_fill = {colors[GREEN_HOVER].r, colors[GREEN_HOVER].g, colors[GREEN_HOVER].b};
+
+                unselected.set_current_fill(current_fill);
+                unselected.set_original_fill(original_fill);
+                unselected.set_hover_fill(hover_fill);
+
+                unselected.set_c1(padding + (col * ((width - padding) / num_cols)));
+                unselected.set_c2(padding + ((col + 1) * ((width - padding) / num_cols)));
+                unselected.set_r1(row * (height) / num_rows);
+                unselected.set_r2((row + 1) * (height) / num_rows);
+
+                unselected.set_row(row);
+                unselected.set_column(col);
+                user_interface_board[row][col] = move(make_unique<Unselected_tile>(unselected));
+
+            } else {
+                Unselected_flag flag;
+                if (temp % 2 == 1) {
+                    original_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g, colors[LIGHT_GREEN].b};
+                    current_fill = {colors[LIGHT_GREEN].r, colors[LIGHT_GREEN].g, colors[LIGHT_GREEN].b};
+                } else {
+                    original_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g, colors[DARK_GREEN].b};
+                    current_fill = {colors[DARK_GREEN].r, colors[DARK_GREEN].g, colors[DARK_GREEN].b};
+                }
+
+                hover_fill = {colors[GREEN_HOVER].r, colors[GREEN_HOVER].g, colors[GREEN_HOVER].b};
+
+                flag.set_c1(padding + (col * ((width - padding) / num_cols)));
+                flag.set_c2(padding + ((col + 1) * ((width - padding) / num_cols)));
+                flag.set_r1((row) * (height) / num_rows);
+                flag.set_r2((row + 1) * (height) / num_rows);
+
+
+                flag.set_current_fill(current_fill);
+                flag.set_original_fill(original_fill);
+                flag.set_hover_fill(hover_fill);
+
+                flag.set_row(row);
+                flag.set_column(col);
+                user_interface_board[row][col] = move(make_unique<Unselected_flag>(flag));
+            }
         }
 
-        hover_fill = {colors[GREEN_HOVER].r, colors[GREEN_HOVER].g,colors[GREEN_HOVER].b};
-
-        flag.set_c1(padding + (col * ((width - padding)/ num_cols)));
-        flag.set_c2(padding + ((col + 1) * ((width - padding)/ num_cols)));
-        flag.set_r1((row) * (height)/ num_rows);
-        flag.set_r2((row + 1) * (height)/ num_rows);
-
-
-        flag.set_current_fill(current_fill);
-        flag.set_original_fill(original_fill);
-        flag.set_hover_fill(hover_fill);
-
-        flag.set_row(row);
-        flag.set_column(col);
-        user_interface_board[row][col] = move(make_unique<Unselected_flag>(flag));
     }
 
-    // Todo this is the logic for clicking on the board
     void click_user_board(int row, int col) {
         if (completed_board[row][col]->get_adj_bombs() == -1) {
             user_interface_board[row][col] = move(completed_board[row][col]);

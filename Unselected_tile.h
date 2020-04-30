@@ -9,11 +9,15 @@ public:
     Unselected_tile(){
         row = 0;
         column = 0;
+        flagged = false;
+        adj_bombs = 10;
     }
 
     Unselected_tile(int row, int column) {
         this->row = row;
         this->column = column;
+        flagged = false;
+        adj_bombs = 10;
     }
 
 
