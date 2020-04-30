@@ -23,9 +23,9 @@
 <br>
 
 ## Difficulties:
-<br>
+
 * Beginner
-    * 10 Mines
+    * 10 Mines 
     * 8 x 8
 * Intermediate
     * 40 Mines
@@ -33,4 +33,3 @@
 * Expert
     * 99 Mines
     * 22 x 22
-    
