@@ -3,7 +3,6 @@
 using namespace std;
 
 Tile::Tile() {
-    display = false;
 }
 bool Tile::get_flagged() const {
     return flagged;

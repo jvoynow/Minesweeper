@@ -10,8 +10,7 @@ struct color {
 
 class Tile {
 protected:
-    bool display, selected, flagged;
-
+    bool flagged;
     int adj_bombs;
     int row, column;
     color current_fill, original_fill, hover_fill;
