@@ -1,10 +1,8 @@
-# PS-JV-Graphics-Final
-
 # Minesweeper:
+### PS-JV-Graphics-Final
+__**Note to User:**__ You must have freeglut.dll included in your CMakeFiles to run 
 
-*Note to User: You must have freeglut.dll included in your CMakeFiles to run*
-
-### Directions:
+## Directions:
 <br>
 - To start playing, press Beginner, Intermediate, or Expert. <br>
 - These three difficulties have an associated board size and bomb count as outlined below.<br>
@@ -24,8 +22,8 @@
 - Good luck!<br>
 <br>
 
-
-### Difficulties:
+## Difficulties:
+<br>
 * Beginner
     * 10 Mines
     * 8 x 8
