@@ -1,6 +1,6 @@
 # Minesweeper:
 ### PS-JV-Graphics-Final
-__**Note to User:**__ You must have freeglut.dll included in your CMakeFiles to run 
+**Note to User:** You must have freeglut.dll included in your CMakeFiles to run 
 
 ## Directions:
 <br>
