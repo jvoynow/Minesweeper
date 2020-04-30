@@ -18,7 +18,6 @@ public:
 
 
     void draw() const override {
-        // TODO: Change this
         glColor3f(current_fill.r,current_fill.g,current_fill.b);
         glBegin(GL_QUADS);
         glVertex2i(c1, r1);
