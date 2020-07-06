@@ -3,6 +3,8 @@
 **Note to User:** You must have freeglut.dll included in your CMakeFiles to run 
 
 ![minesweeper1](/minesweeper1.PNG)
+![minesweeper1](/minesweeper2.PNG)
+![minesweeper1](/minesweeper3.PNG)
 
 ## Directions:
 <br>
