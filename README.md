@@ -2,7 +2,7 @@
 ### PS-JV-Graphics-Final
 **Note to User:** You must have freeglut.dll included in your CMakeFiles to run 
 
-![MarineGEO circle logo](/minesweeper1.png "MarineGEO logo")
+![MarineGEO circle logo](/Minesweeper/minesweeper1.png "MarineGEO logo")
 
 ## Directions:
 <br>
