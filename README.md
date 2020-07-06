@@ -2,6 +2,8 @@
 ### PS-JV-Graphics-Final
 **Note to User:** You must have freeglut.dll included in your CMakeFiles to run 
 
+![MarineGEO circle logo](/assets/img/MarineGEO_logo.png "MarineGEO logo")
+
 ## Directions:
 <br>
 - To start playing, press Beginner, Intermediate, or Expert. <br>
