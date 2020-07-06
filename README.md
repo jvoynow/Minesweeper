@@ -2,7 +2,7 @@
 ### PS-JV-Graphics-Final
 **Note to User:** You must have freeglut.dll included in your CMakeFiles to run 
 
-<img src="minesweeper1.png" alt="MarineGEO circle logo" style="height: 100px; width:100px;"/>
+![GitHub Logo](/images/minesweeper1.png)
 
 ## Directions:
 <br>
